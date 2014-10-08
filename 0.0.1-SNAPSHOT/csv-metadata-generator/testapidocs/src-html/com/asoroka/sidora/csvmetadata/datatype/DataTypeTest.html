@@ -1,0 +1,276 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/**<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * TEMPORARY LICENSE HEADER STANDIN<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * REPLACE WITH APPROPRIATE SIDORA LICENSE<a name="line.3"></a>
+<span class="sourceLineNo">004</span> */<a name="line.4"></a>
+<span class="sourceLineNo">005</span><a name="line.5"></a>
+<span class="sourceLineNo">006</span>package com.asoroka.sidora.csvmetadata.datatype;<a name="line.6"></a>
+<span class="sourceLineNo">007</span><a name="line.7"></a>
+<span class="sourceLineNo">008</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.Boolean;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.DateTime;<a name="line.9"></a>
+<span class="sourceLineNo">010</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.Decimal;<a name="line.10"></a>
+<span class="sourceLineNo">011</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.Geographic;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.Integer;<a name="line.12"></a>
+<span class="sourceLineNo">013</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.NonNegativeInteger;<a name="line.13"></a>
+<span class="sourceLineNo">014</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.PositiveInteger;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.String;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.orderingByHierarchy;<a name="line.16"></a>
+<span class="sourceLineNo">017</span>import static com.asoroka.sidora.csvmetadata.datatype.DataType.parseableAs;<a name="line.17"></a>
+<span class="sourceLineNo">018</span>import static com.google.common.collect.ImmutableMap.builder;<a name="line.18"></a>
+<span class="sourceLineNo">019</span>import static com.google.common.collect.Lists.newArrayList;<a name="line.19"></a>
+<span class="sourceLineNo">020</span>import static com.google.common.collect.Sets.newHashSet;<a name="line.20"></a>
+<span class="sourceLineNo">021</span>import static java.util.Collections.sort;<a name="line.21"></a>
+<span class="sourceLineNo">022</span>import static java.util.EnumSet.of;<a name="line.22"></a>
+<span class="sourceLineNo">023</span>import static org.junit.Assert.assertEquals;<a name="line.23"></a>
+<span class="sourceLineNo">024</span>import static org.junit.Assert.assertFalse;<a name="line.24"></a>
+<span class="sourceLineNo">025</span>import static org.junit.Assert.assertTrue;<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>import java.util.ArrayList;<a name="line.27"></a>
+<span class="sourceLineNo">028</span>import java.util.List;<a name="line.28"></a>
+<span class="sourceLineNo">029</span>import java.util.Map;<a name="line.29"></a>
+<span class="sourceLineNo">030</span>import java.util.Set;<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>import org.junit.Test;<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>import com.asoroka.sidora.csvmetadata.datatype.DataType;<a name="line.34"></a>
+<span class="sourceLineNo">035</span>import com.google.common.collect.ImmutableMap;<a name="line.35"></a>
+<span class="sourceLineNo">036</span><a name="line.36"></a>
+<span class="sourceLineNo">037</span>public class DataTypeTest {<a name="line.37"></a>
+<span class="sourceLineNo">038</span><a name="line.38"></a>
+<span class="sourceLineNo">039</span>    // private static final Logger log = getLogger(DataTypeTest.class);<a name="line.39"></a>
+<span class="sourceLineNo">040</span><a name="line.40"></a>
+<span class="sourceLineNo">041</span>    private static Map&lt;DataType, Set&lt;DataType&gt;&gt; expectedParseableTypes;<a name="line.41"></a>
+<span class="sourceLineNo">042</span><a name="line.42"></a>
+<span class="sourceLineNo">043</span>    private static Map&lt;DataType, Set&lt;DataType&gt;&gt; expectedSuperTypes;<a name="line.43"></a>
+<span class="sourceLineNo">044</span><a name="line.44"></a>
+<span class="sourceLineNo">045</span>    private static Map&lt;DataType, Set&lt;String&gt;&gt; sampleValues;<a name="line.45"></a>
+<span class="sourceLineNo">046</span><a name="line.46"></a>
+<span class="sourceLineNo">047</span>    private static Map&lt;String, DataType&gt; dataTypeNames;<a name="line.47"></a>
+<span class="sourceLineNo">048</span><a name="line.48"></a>
+<span class="sourceLineNo">049</span>    {<a name="line.49"></a>
+<span class="sourceLineNo">050</span>        {<a name="line.50"></a>
+<span class="sourceLineNo">051</span>            final ImmutableMap.Builder&lt;DataType, Set&lt;DataType&gt;&gt; b = builder();<a name="line.51"></a>
+<span class="sourceLineNo">052</span><a name="line.52"></a>
+<span class="sourceLineNo">053</span>            b.put(PositiveInteger, of(String, Decimal, Integer, NonNegativeInteger, PositiveInteger, DateTime));<a name="line.53"></a>
+<span class="sourceLineNo">054</span>            b.put(NonNegativeInteger, of(String, Decimal, Integer, NonNegativeInteger, DateTime));<a name="line.54"></a>
+<span class="sourceLineNo">055</span>            b.put(Integer, of(String, Decimal, Integer, DateTime));<a name="line.55"></a>
+<span class="sourceLineNo">056</span>            b.put(Decimal, of(String, Decimal));<a name="line.56"></a>
+<span class="sourceLineNo">057</span>            b.put(Geographic, of(Geographic, String));<a name="line.57"></a>
+<span class="sourceLineNo">058</span>            b.put(Boolean, of(Boolean, String));<a name="line.58"></a>
+<span class="sourceLineNo">059</span>            b.put(DateTime, of(DateTime, String));<a name="line.59"></a>
+<span class="sourceLineNo">060</span>            b.put(String, of(String));<a name="line.60"></a>
+<span class="sourceLineNo">061</span><a name="line.61"></a>
+<span class="sourceLineNo">062</span>            expectedParseableTypes = b.build();<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>            final ImmutableMap.Builder&lt;DataType, Set&lt;DataType&gt;&gt; b2 = builder();<a name="line.64"></a>
+<span class="sourceLineNo">065</span><a name="line.65"></a>
+<span class="sourceLineNo">066</span>            b2.put(PositiveInteger, of(String, Decimal, Integer, NonNegativeInteger, PositiveInteger));<a name="line.66"></a>
+<span class="sourceLineNo">067</span>            b2.put(NonNegativeInteger, of(String, Decimal, Integer, NonNegativeInteger));<a name="line.67"></a>
+<span class="sourceLineNo">068</span>            b2.put(Integer, of(String, Decimal, Integer));<a name="line.68"></a>
+<span class="sourceLineNo">069</span>            b2.put(Decimal, of(String, Decimal));<a name="line.69"></a>
+<span class="sourceLineNo">070</span>            b2.put(Geographic, of(String, Geographic));<a name="line.70"></a>
+<span class="sourceLineNo">071</span>            b2.put(Boolean, of(String, Boolean));<a name="line.71"></a>
+<span class="sourceLineNo">072</span>            b2.put(String, of(String));<a name="line.72"></a>
+<span class="sourceLineNo">073</span>            b2.put(DateTime, of(String, DateTime));<a name="line.73"></a>
+<span class="sourceLineNo">074</span><a name="line.74"></a>
+<span class="sourceLineNo">075</span>            expectedSuperTypes = b2.build();<a name="line.75"></a>
+<span class="sourceLineNo">076</span><a name="line.76"></a>
+<span class="sourceLineNo">077</span>            final ImmutableMap.Builder&lt;DataType, Set&lt;String&gt;&gt; b3 = builder();<a name="line.77"></a>
+<span class="sourceLineNo">078</span><a name="line.78"></a>
+<span class="sourceLineNo">079</span>            b3.put(PositiveInteger, newHashSet("123", "9000"));<a name="line.79"></a>
+<span class="sourceLineNo">080</span>            b3.put(NonNegativeInteger, newHashSet("0"));<a name="line.80"></a>
+<span class="sourceLineNo">081</span>            b3.put(Integer, newHashSet("-1", "-9999"));<a name="line.81"></a>
+<span class="sourceLineNo">082</span>            b3.put(Decimal, newHashSet("-5344543.4563453", "6734.999"));<a name="line.82"></a>
+<span class="sourceLineNo">083</span>            b3.put(Geographic, newHashSet("38.03,-78.478889", "38.03,-78.478889, 0"));<a name="line.83"></a>
+<span class="sourceLineNo">084</span>            b3.put(Boolean, newHashSet("truE", "falsE", "t", "F"));<a name="line.84"></a>
+<span class="sourceLineNo">085</span>            b3.put(String, newHashSet("oobleck"));<a name="line.85"></a>
+<span class="sourceLineNo">086</span>            b3.put(DateTime, newHashSet("1990-3-4"));<a name="line.86"></a>
+<span class="sourceLineNo">087</span><a name="line.87"></a>
+<span class="sourceLineNo">088</span>            sampleValues = b3.build();<a name="line.88"></a>
+<span class="sourceLineNo">089</span><a name="line.89"></a>
+<span class="sourceLineNo">090</span>            final ImmutableMap.Builder&lt;String, DataType&gt; b4 = builder();<a name="line.90"></a>
+<span class="sourceLineNo">091</span><a name="line.91"></a>
+<span class="sourceLineNo">092</span>            b4.putAll(ImmutableMap.of("PositiveInteger", PositiveInteger, "NonNegativeInteger", NonNegativeInteger,<a name="line.92"></a>
+<span class="sourceLineNo">093</span>                    "Integer", Integer));<a name="line.93"></a>
+<span class="sourceLineNo">094</span><a name="line.94"></a>
+<span class="sourceLineNo">095</span>            b4.putAll(ImmutableMap.of("Decimal", Decimal, "Geographic", Geographic, "Boolean", Boolean, "DateTime",<a name="line.95"></a>
+<span class="sourceLineNo">096</span>                    DateTime, "String", String));<a name="line.96"></a>
+<span class="sourceLineNo">097</span>            dataTypeNames = b4.build();<a name="line.97"></a>
+<span class="sourceLineNo">098</span>        }<a name="line.98"></a>
+<span class="sourceLineNo">099</span>    }<a name="line.99"></a>
+<span class="sourceLineNo">100</span><a name="line.100"></a>
+<span class="sourceLineNo">101</span>    @Test<a name="line.101"></a>
+<span class="sourceLineNo">102</span>    public void testCorrectParsingOfValues() {<a name="line.102"></a>
+<span class="sourceLineNo">103</span>        for (final DataType testType : DataType.values()) {<a name="line.103"></a>
+<span class="sourceLineNo">104</span>            for (final String testValue : sampleValues.get(testType)) {<a name="line.104"></a>
+<span class="sourceLineNo">105</span>                final Set&lt;DataType&gt; result = parseableAs(testValue);<a name="line.105"></a>
+<span class="sourceLineNo">106</span>                assertEquals("Did not find the appropriate datatypes suggested as parseable for a " + testType + "!",<a name="line.106"></a>
+<span class="sourceLineNo">107</span>                        expectedParseableTypes<a name="line.107"></a>
+<span class="sourceLineNo">108</span>                                .get(testType), result);<a name="line.108"></a>
+<span class="sourceLineNo">109</span>            }<a name="line.109"></a>
+<span class="sourceLineNo">110</span>        }<a name="line.110"></a>
+<span class="sourceLineNo">111</span>    }<a name="line.111"></a>
+<span class="sourceLineNo">112</span><a name="line.112"></a>
+<span class="sourceLineNo">113</span>    @Test<a name="line.113"></a>
+<span class="sourceLineNo">114</span>    public void testSupertypes() {<a name="line.114"></a>
+<span class="sourceLineNo">115</span>        for (final DataType testDatatype : DataType.values()) {<a name="line.115"></a>
+<span class="sourceLineNo">116</span>            final Set&lt;DataType&gt; result = testDatatype.supertypes();<a name="line.116"></a>
+<span class="sourceLineNo">117</span>            assertEquals("Did not find the appropriate supertypes for" + testDatatype + "!", expectedSuperTypes<a name="line.117"></a>
+<span class="sourceLineNo">118</span>                    .get(testDatatype), result);<a name="line.118"></a>
+<span class="sourceLineNo">119</span>        }<a name="line.119"></a>
+<span class="sourceLineNo">120</span>    }<a name="line.120"></a>
+<span class="sourceLineNo">121</span><a name="line.121"></a>
+<span class="sourceLineNo">122</span>    @Test<a name="line.122"></a>
+<span class="sourceLineNo">123</span>    public void testOrderingByHierarchy() {<a name="line.123"></a>
+<span class="sourceLineNo">124</span>        List&lt;DataType&gt; listToBeSorted = _(Decimal, PositiveInteger, NonNegativeInteger, Integer, String);<a name="line.124"></a>
+<span class="sourceLineNo">125</span>        List&lt;DataType&gt; listInCorrectSorting =<a name="line.125"></a>
+<span class="sourceLineNo">126</span>                _(String, Decimal, Integer, NonNegativeInteger, PositiveInteger);<a name="line.126"></a>
+<span class="sourceLineNo">127</span>        sort(listToBeSorted, orderingByHierarchy);<a name="line.127"></a>
+<span class="sourceLineNo">128</span>        assertEquals("Got wrong ordering by hierarchy of datatypes!", listInCorrectSorting, listToBeSorted);<a name="line.128"></a>
+<span class="sourceLineNo">129</span><a name="line.129"></a>
+<span class="sourceLineNo">130</span>        listToBeSorted = _(Geographic, String);<a name="line.130"></a>
+<span class="sourceLineNo">131</span>        listInCorrectSorting = _(String, Geographic);<a name="line.131"></a>
+<span class="sourceLineNo">132</span>        sort(listToBeSorted, orderingByHierarchy);<a name="line.132"></a>
+<span class="sourceLineNo">133</span>        assertEquals("Got wrong ordering by hierarchy of datatypes!", listInCorrectSorting, listToBeSorted);<a name="line.133"></a>
+<span class="sourceLineNo">134</span><a name="line.134"></a>
+<span class="sourceLineNo">135</span>        listToBeSorted = _(DateTime, String);<a name="line.135"></a>
+<span class="sourceLineNo">136</span>        listInCorrectSorting = _(String, DateTime);<a name="line.136"></a>
+<span class="sourceLineNo">137</span>        sort(listToBeSorted, orderingByHierarchy);<a name="line.137"></a>
+<span class="sourceLineNo">138</span>        assertEquals("Got wrong ordering by hierarchy of datatypes!", listInCorrectSorting, listToBeSorted);<a name="line.138"></a>
+<span class="sourceLineNo">139</span><a name="line.139"></a>
+<span class="sourceLineNo">140</span>        listToBeSorted = _(Boolean, String);<a name="line.140"></a>
+<span class="sourceLineNo">141</span>        listInCorrectSorting = _(String, Boolean);<a name="line.141"></a>
+<span class="sourceLineNo">142</span>        sort(listToBeSorted, orderingByHierarchy);<a name="line.142"></a>
+<span class="sourceLineNo">143</span>        assertEquals("Got wrong ordering by hierarchy of datatypes!", listInCorrectSorting, listToBeSorted);<a name="line.143"></a>
+<span class="sourceLineNo">144</span>    }<a name="line.144"></a>
+<span class="sourceLineNo">145</span><a name="line.145"></a>
+<span class="sourceLineNo">146</span>    @Test<a name="line.146"></a>
+<span class="sourceLineNo">147</span>    public void testBadGeographies() {<a name="line.147"></a>
+<span class="sourceLineNo">148</span>        String testValue = "23, 23, 23, 23";<a name="line.148"></a>
+<span class="sourceLineNo">149</span>        assertFalse("Accepted a four-valued tuple as geographic coordinates!", parseableAs(testValue)<a name="line.149"></a>
+<span class="sourceLineNo">150</span>                .contains(Geographic));<a name="line.150"></a>
+<span class="sourceLineNo">151</span>        testValue = "23";<a name="line.151"></a>
+<span class="sourceLineNo">152</span>        assertFalse("Accepted a one-valued tuple as geographic coordinates!", parseableAs(testValue)<a name="line.152"></a>
+<span class="sourceLineNo">153</span>                .contains(Geographic));<a name="line.153"></a>
+<span class="sourceLineNo">154</span>    }<a name="line.154"></a>
+<span class="sourceLineNo">155</span><a name="line.155"></a>
+<span class="sourceLineNo">156</span>    public void testNoDecimalPointDecimal() {<a name="line.156"></a>
+<span class="sourceLineNo">157</span>        final String testValue = "7087";<a name="line.157"></a>
+<span class="sourceLineNo">158</span>        assertTrue("Failed to accept a no-decimal-point number as a legitimate Decimal!", parseableAs(testValue)<a name="line.158"></a>
+<span class="sourceLineNo">159</span>                .contains(Decimal));<a name="line.159"></a>
+<span class="sourceLineNo">160</span>    }<a name="line.160"></a>
+<span class="sourceLineNo">161</span><a name="line.161"></a>
+<span class="sourceLineNo">162</span>    public void testBadIntegerPartDecimal() {<a name="line.162"></a>
+<span class="sourceLineNo">163</span>        final String testValue = "fhglf.7087";<a name="line.163"></a>
+<span class="sourceLineNo">164</span>        assertFalse("Accepted a \"number\" with non-integral integer part as a legitimate Decimal!", parseableAs(<a name="line.164"></a>
+<span class="sourceLineNo">165</span>                testValue)<a name="line.165"></a>
+<span class="sourceLineNo">166</span>                .contains(Decimal));<a name="line.166"></a>
+<span class="sourceLineNo">167</span>    }<a name="line.167"></a>
+<span class="sourceLineNo">168</span><a name="line.168"></a>
+<span class="sourceLineNo">169</span>    public void testBadDecimalPartDecimal() {<a name="line.169"></a>
+<span class="sourceLineNo">170</span>        final String testValue = "34235.dfgsdfg";<a name="line.170"></a>
+<span class="sourceLineNo">171</span>        assertFalse("Accepted a \"number\" with non-integral decimal part as a legitimate Decimal!", parseableAs(<a name="line.171"></a>
+<span class="sourceLineNo">172</span>                testValue)<a name="line.172"></a>
+<span class="sourceLineNo">173</span>                .contains(Decimal));<a name="line.173"></a>
+<span class="sourceLineNo">174</span>    }<a name="line.174"></a>
+<span class="sourceLineNo">175</span><a name="line.175"></a>
+<span class="sourceLineNo">176</span>    public void testBadBothPartsDecimal() {<a name="line.176"></a>
+<span class="sourceLineNo">177</span>        final String testValue = "sgsg.dfgsdfg";<a name="line.177"></a>
+<span class="sourceLineNo">178</span>        assertFalse("Accepted a \"number\" with non-integral decimal part as a legitimate Decimal!", parseableAs(<a name="line.178"></a>
+<span class="sourceLineNo">179</span>                testValue)<a name="line.179"></a>
+<span class="sourceLineNo">180</span>                .contains(Decimal));<a name="line.180"></a>
+<span class="sourceLineNo">181</span>    }<a name="line.181"></a>
+<span class="sourceLineNo">182</span><a name="line.182"></a>
+<span class="sourceLineNo">183</span>    public void testCompletelyBadDecimal() {<a name="line.183"></a>
+<span class="sourceLineNo">184</span>        final String testValue = "s24fgsdfg";<a name="line.184"></a>
+<span class="sourceLineNo">185</span>        assertFalse("Accepted a \"number\" with non-integral decimal part as a legitimate Decimal!", parseableAs(<a name="line.185"></a>
+<span class="sourceLineNo">186</span>                testValue)<a name="line.186"></a>
+<span class="sourceLineNo">187</span>                .contains(Decimal));<a name="line.187"></a>
+<span class="sourceLineNo">188</span>    }<a name="line.188"></a>
+<span class="sourceLineNo">189</span><a name="line.189"></a>
+<span class="sourceLineNo">190</span>    @Test<a name="line.190"></a>
+<span class="sourceLineNo">191</span>    public void testNames() {<a name="line.191"></a>
+<span class="sourceLineNo">192</span>        assertEquals(<a name="line.192"></a>
+<span class="sourceLineNo">193</span>                "Our test datatype names are fewer or greater in number than the number of actual DataTypes!",<a name="line.193"></a>
+<span class="sourceLineNo">194</span>                DataType.values().length, dataTypeNames.size());<a name="line.194"></a>
+<span class="sourceLineNo">195</span>        for (final String name : dataTypeNames.keySet()) {<a name="line.195"></a>
+<span class="sourceLineNo">196</span>            assertEquals(dataTypeNames.get(name), DataType.valueOf(name));<a name="line.196"></a>
+<span class="sourceLineNo">197</span>        }<a name="line.197"></a>
+<span class="sourceLineNo">198</span>    }<a name="line.198"></a>
+<span class="sourceLineNo">199</span><a name="line.199"></a>
+<span class="sourceLineNo">200</span>    @SafeVarargs<a name="line.200"></a>
+<span class="sourceLineNo">201</span>    private static &lt;E&gt; ArrayList&lt;E&gt; _(final E... es) {<a name="line.201"></a>
+<span class="sourceLineNo">202</span>        return newArrayList(es);<a name="line.202"></a>
+<span class="sourceLineNo">203</span>    }<a name="line.203"></a>
+<span class="sourceLineNo">204</span>}<a name="line.204"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>
