@@ -109,7 +109,7 @@
 <span class="sourceLineNo">101</span>        final CsvMetadata results = testParser.getMetadata(mockURL);<a name="line.101"></a>
 <span class="sourceLineNo">102</span><a name="line.102"></a>
 <span class="sourceLineNo">103</span>        final List&lt;String&gt; headers = results.headerNames();<a name="line.103"></a>
-<span class="sourceLineNo">104</span>        final List&lt;DataType&gt; types = results.columnTypes();<a name="line.104"></a>
+<span class="sourceLineNo">104</span>        final List&lt;DataType&gt; types = results.fieldTypes();<a name="line.104"></a>
 <span class="sourceLineNo">105</span>        @SuppressWarnings("rawtypes")<a name="line.105"></a>
 <span class="sourceLineNo">106</span>        // we ignore type-safety here for a simpler unit test<a name="line.106"></a>
 <span class="sourceLineNo">107</span>        final List ranges = results.minMaxes();<a name="line.107"></a>

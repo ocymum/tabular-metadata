@@ -12,7 +12,7 @@
 <span class="sourceLineNo">004</span>import com.asoroka.sidora.csvmetadata.datatype.DataType;<a name="line.4"></a>
 <span class="sourceLineNo">005</span><a name="line.5"></a>
 <span class="sourceLineNo">006</span>/**<a name="line.6"></a>
-<span class="sourceLineNo">007</span> * A heuristic that permits a certain specified fraction of values to fail at parsing.<a name="line.7"></a>
+<span class="sourceLineNo">007</span> * A heuristic that permits a certain specified fraction of values to fail at parsing to the most likely type.<a name="line.7"></a>
 <span class="sourceLineNo">008</span> * <a name="line.8"></a>
 <span class="sourceLineNo">009</span> * @author ajs6f<a name="line.9"></a>
 <span class="sourceLineNo">010</span> */<a name="line.10"></a>
@@ -26,23 +26,20 @@
 <span class="sourceLineNo">018</span>        this.fractionOfAllowedNonparseables = d;<a name="line.18"></a>
 <span class="sourceLineNo">019</span>    }<a name="line.19"></a>
 <span class="sourceLineNo">020</span><a name="line.20"></a>
-<span class="sourceLineNo">021</span>    /**<a name="line.21"></a>
-<span class="sourceLineNo">022</span>     * The fraction of nonparsing values to permit.<a name="line.22"></a>
-<span class="sourceLineNo">023</span>     */<a name="line.23"></a>
-<span class="sourceLineNo">024</span>    private final double fractionOfAllowedNonparseables;<a name="line.24"></a>
-<span class="sourceLineNo">025</span><a name="line.25"></a>
-<span class="sourceLineNo">026</span>    @Override<a name="line.26"></a>
-<span class="sourceLineNo">027</span>    protected boolean candidacy(final DataType type) {<a name="line.27"></a>
-<span class="sourceLineNo">028</span>        final float parseableOccurence = (float) typeCounts.get(type) / (float) totalNumValues();<a name="line.28"></a>
-<span class="sourceLineNo">029</span>        return parseableOccurence &gt;= (1 - fractionOfAllowedNonparseables);<a name="line.29"></a>
-<span class="sourceLineNo">030</span>    }<a name="line.30"></a>
-<span class="sourceLineNo">031</span><a name="line.31"></a>
-<span class="sourceLineNo">032</span>    @Override<a name="line.32"></a>
-<span class="sourceLineNo">033</span>    public FractionHeuristic clone() {<a name="line.33"></a>
-<span class="sourceLineNo">034</span>        return new FractionHeuristic(fractionOfAllowedNonparseables);<a name="line.34"></a>
-<span class="sourceLineNo">035</span>    }<a name="line.35"></a>
-<span class="sourceLineNo">036</span><a name="line.36"></a>
-<span class="sourceLineNo">037</span>}<a name="line.37"></a>
+<span class="sourceLineNo">021</span>    private final double fractionOfAllowedNonparseables;<a name="line.21"></a>
+<span class="sourceLineNo">022</span><a name="line.22"></a>
+<span class="sourceLineNo">023</span>    @Override<a name="line.23"></a>
+<span class="sourceLineNo">024</span>    protected boolean candidacy(final DataType type) {<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        final float parseableOccurence = (float) typeCounts.get(type) / (float) totalNumValues();<a name="line.25"></a>
+<span class="sourceLineNo">026</span>        return parseableOccurence &gt;= (1 - fractionOfAllowedNonparseables);<a name="line.26"></a>
+<span class="sourceLineNo">027</span>    }<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>    @Override<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    public FractionHeuristic clone() {<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        return new FractionHeuristic(fractionOfAllowedNonparseables);<a name="line.31"></a>
+<span class="sourceLineNo">032</span>    }<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>}<a name="line.34"></a>
 
 
 

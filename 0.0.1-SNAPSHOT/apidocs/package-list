@@ -4,4 +4,3 @@ com.asoroka.sidora.csvmetadata.formats
 com.asoroka.sidora.csvmetadata.heuristics
 com.asoroka.sidora.csvmetadata.spring
 com.asoroka.sidora.csvmetadata.spring.defaults
-com.asoroka.sidora.csvmetadata.statistics
