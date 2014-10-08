@@ -1,0 +1,8 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.csvmetadata.spring,FractionHeuristicBeanDefinitionParser,0,16,0,0,0,5,0,3,0,3
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.csvmetadata.spring,TabSeparatedBeanDefinitionParser,0,6,0,0,0,3,0,3,0,3
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.csvmetadata.spring,CsvMetadataNamespaceHandler,0,22,0,0,0,5,0,2,0,2
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.csvmetadata.spring,CsvMetadataGeneratorBeanDefinitionParser,0,60,0,8,0,16,0,7,0,3
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.csvmetadata.spring.defaults,DefaultDatatypeStrategy,0,3,0,0,0,1,0,1,0,1
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.csvmetadata.spring.defaults,DefaultCsvFormat,0,3,0,0,0,1,0,1,0,1
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.csvmetadata.spring.defaults,DefaultHeaderStrategy,0,3,0,0,0,1,0,1,0,1
