@@ -245,7 +245,7 @@
 <a class="jxr_linenumber" name="235" href="#235">235</a> 
 <a class="jxr_linenumber" name="236" href="#236">236</a>     <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="237" href="#237">237</a> <em class="jxr_javadoccomment">     * @param types The types to compare.</em>
-<a class="jxr_linenumber" name="238" href="#238">238</a> <em class="jxr_javadoccomment">     * @return The first type with as low as position in the hierarchy as any other.</em>
+<a class="jxr_linenumber" name="238" href="#238">238</a> <em class="jxr_javadoccomment">     * @return The first type with as "bottom-most" as position in the hierarchy as any other.</em>
 <a class="jxr_linenumber" name="239" href="#239">239</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="240" href="#240">240</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> <a href="../../../../../com/asoroka/sidora/csvmetadata/datatype/DataType.html">DataType</a> firstMostRestrictiveType(<strong class="jxr_keyword">final</strong> Collection&lt;DataType&gt; types) {
 <a class="jxr_linenumber" name="241" href="#241">241</a>         <strong class="jxr_keyword">return</strong> max(types, orderingByHierarchy);
