@@ -1,6 +1,6 @@
-com.asoroka.sidora.csvmetadata
-com.asoroka.sidora.csvmetadata.datatype
-com.asoroka.sidora.csvmetadata.formats
-com.asoroka.sidora.csvmetadata.heuristics
-com.asoroka.sidora.csvmetadata.spring
-com.asoroka.sidora.csvmetadata.test
+com.asoroka.sidora.tabularmetadata
+com.asoroka.sidora.tabularmetadata.datatype
+com.asoroka.sidora.tabularmetadata.formats
+com.asoroka.sidora.tabularmetadata.heuristics
+com.asoroka.sidora.tabularmetadata.spring
+com.asoroka.sidora.tabularmetadata.test
