@@ -1,0 +1,136 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en">
+<head>
+<title>Source code</title>
+<link rel="stylesheet" type="text/css" href="../../../../../../stylesheet.css" title="Style">
+</head>
+<body>
+<div class="sourceContainer">
+<pre><span class="sourceLineNo">001</span>/**<a name="line.1"></a>
+<span class="sourceLineNo">002</span> * TEMPORARY LICENSE HEADER STANDIN<a name="line.2"></a>
+<span class="sourceLineNo">003</span> * REPLACE WITH APPROPRIATE SIDORA LICENSE<a name="line.3"></a>
+<span class="sourceLineNo">004</span> */<a name="line.4"></a>
+<span class="sourceLineNo">005</span><a name="line.5"></a>
+<span class="sourceLineNo">006</span>package com.asoroka.sidora.tabularmetadata.heuristics;<a name="line.6"></a>
+<span class="sourceLineNo">007</span><a name="line.7"></a>
+<span class="sourceLineNo">008</span>import static com.asoroka.sidora.tabularmetadata.datatype.DataType.parseableAs;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import static com.google.common.collect.Ordering.natural;<a name="line.9"></a>
+<span class="sourceLineNo">010</span><a name="line.10"></a>
+<span class="sourceLineNo">011</span>import java.util.EnumMap;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import java.util.Map;<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.asoroka.sidora.tabularmetadata.datatype.DataType;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.asoroka.sidora.tabularmetadata.datatype.ParsingException;<a name="line.15"></a>
+<span class="sourceLineNo">016</span>import com.google.common.collect.Range;<a name="line.16"></a>
+<span class="sourceLineNo">017</span><a name="line.17"></a>
+<span class="sourceLineNo">018</span>/**<a name="line.18"></a>
+<span class="sourceLineNo">019</span> * Calculates the ranges of values supplied for each possible parseable type, without caching the values supplied.<a name="line.19"></a>
+<span class="sourceLineNo">020</span> * <a name="line.20"></a>
+<span class="sourceLineNo">021</span> * @author ajs6f<a name="line.21"></a>
+<span class="sourceLineNo">022</span> * @param &lt;T&gt;<a name="line.22"></a>
+<span class="sourceLineNo">023</span> */<a name="line.23"></a>
+<span class="sourceLineNo">024</span>public abstract class RunningMinMaxHeuristic&lt;T extends RunningMinMaxHeuristic&lt;T&gt;&gt; implements<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        DataTypeHeuristic&lt;T&gt; {<a name="line.25"></a>
+<span class="sourceLineNo">026</span><a name="line.26"></a>
+<span class="sourceLineNo">027</span>    /**<a name="line.27"></a>
+<span class="sourceLineNo">028</span>     * A {@link Map} from data types to the minimum value from all presented values that were parseable in that type.<a name="line.28"></a>
+<span class="sourceLineNo">029</span>     */<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    private Map&lt;DataType, Comparable&lt;?&gt;&gt; minimums = new EnumMap&lt;&gt;(DataType.class);<a name="line.30"></a>
+<span class="sourceLineNo">031</span><a name="line.31"></a>
+<span class="sourceLineNo">032</span>    /**<a name="line.32"></a>
+<span class="sourceLineNo">033</span>     * A {@link Map} from data types to the maximum value from all presented values that were parseable in that type.<a name="line.33"></a>
+<span class="sourceLineNo">034</span>     */<a name="line.34"></a>
+<span class="sourceLineNo">035</span>    protected Map&lt;DataType, Comparable&lt;?&gt;&gt; maximums = new EnumMap&lt;&gt;(DataType.class);<a name="line.35"></a>
+<span class="sourceLineNo">036</span><a name="line.36"></a>
+<span class="sourceLineNo">037</span>    @Override<a name="line.37"></a>
+<span class="sourceLineNo">038</span>    public void addValue(final String input) {<a name="line.38"></a>
+<span class="sourceLineNo">039</span>        for (final DataType type : parseableAs(input)) {<a name="line.39"></a>
+<span class="sourceLineNo">040</span>            final Comparable&lt;?&gt; currentMin = minimums.get(type);<a name="line.40"></a>
+<span class="sourceLineNo">041</span>            final Comparable&lt;?&gt; currentMax = maximums.get(type);<a name="line.41"></a>
+<span class="sourceLineNo">042</span>            try {<a name="line.42"></a>
+<span class="sourceLineNo">043</span>                final Comparable&lt;?&gt; value = type.parse(input);<a name="line.43"></a>
+<span class="sourceLineNo">044</span>                // TODO avoid this repeated conditional<a name="line.44"></a>
+<span class="sourceLineNo">045</span>                minimums.put(type, (currentMin == null) ? value : natural().min(currentMin, value));<a name="line.45"></a>
+<span class="sourceLineNo">046</span>                maximums.put(type, (currentMax == null) ? value : natural().max(currentMax, value));<a name="line.46"></a>
+<span class="sourceLineNo">047</span>            } catch (final ParsingException e) {<a name="line.47"></a>
+<span class="sourceLineNo">048</span>                // NO OP<a name="line.48"></a>
+<span class="sourceLineNo">049</span>                // we don't care if a parse attempt fails because we're garnering measures for those that succeed<a name="line.49"></a>
+<span class="sourceLineNo">050</span>            }<a name="line.50"></a>
+<span class="sourceLineNo">051</span>        }<a name="line.51"></a>
+<span class="sourceLineNo">052</span>    }<a name="line.52"></a>
+<span class="sourceLineNo">053</span><a name="line.53"></a>
+<span class="sourceLineNo">054</span>    @Override<a name="line.54"></a>
+<span class="sourceLineNo">055</span>    public &lt;MinMax extends Comparable&lt;MinMax&gt;&gt; Range&lt;MinMax&gt; getRange() {<a name="line.55"></a>
+<span class="sourceLineNo">056</span>        final MinMax min = (MinMax) minimums.get(mostLikelyType());<a name="line.56"></a>
+<span class="sourceLineNo">057</span>        final MinMax max = (MinMax) maximums.get(mostLikelyType());<a name="line.57"></a>
+<span class="sourceLineNo">058</span>        return Range.closed(min, max);<a name="line.58"></a>
+<span class="sourceLineNo">059</span>    }<a name="line.59"></a>
+<span class="sourceLineNo">060</span><a name="line.60"></a>
+<span class="sourceLineNo">061</span>    @Override<a name="line.61"></a>
+<span class="sourceLineNo">062</span>    abstract public T clone();<a name="line.62"></a>
+<span class="sourceLineNo">063</span><a name="line.63"></a>
+<span class="sourceLineNo">064</span>}<a name="line.64"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</pre>
+</div>
+</body>
+</html>

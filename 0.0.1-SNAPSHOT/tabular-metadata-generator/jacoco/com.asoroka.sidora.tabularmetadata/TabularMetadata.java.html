@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TabularMetadata.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata</a> &gt; <span class="el_source">TabularMetadata.java</span></div><h1>TabularMetadata.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata;
+
+import java.util.List;
+
+import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.google.common.collect.Range;
+
+/**
+ * A container for the results of metadata extraction on a single data file.
+ * 
+ * @author ajs6f
+ */
+public class TabularMetadata {
+
+    private final List&lt;String&gt; headerNames;
+
+    private final List&lt;DataType&gt; fieldTypes;
+
+    private final List&lt;Range&lt;?&gt;&gt; minMaxes;
+
+    /**
+     * @param headerNames
+     * @param fieldTypes
+     * @param minMaxes
+     */
+    public TabularMetadata(final List&lt;String&gt; headerNames, final List&lt;DataType&gt; fieldTypes,
+<span class="fc" id="L28">            final List&lt;Range&lt;?&gt;&gt; minMaxes) {</span>
+<span class="fc" id="L29">        this.headerNames = headerNames;</span>
+<span class="fc" id="L30">        this.fieldTypes = fieldTypes;</span>
+<span class="fc" id="L31">        this.minMaxes = minMaxes;</span>
+<span class="fc" id="L32">    }</span>
+
+    /**
+     * @return A list of header names, empty if there was no header row found.
+     */
+    public List&lt;String&gt; headerNames() {
+<span class="fc" id="L38">        return headerNames;</span>
+    }
+
+    /**
+     * @return A list of field datatypes.
+     */
+    public List&lt;DataType&gt; fieldTypes() {
+<span class="fc" id="L45">        return fieldTypes;</span>
+    }
+
+    /**
+     * @return A list of closed {@link Range}s, with the minimum and maximum for each field. The values of the
+     *         endpoints of the ranges are in the Java type value-space associated to the datatype considered most
+     *         likely for that field.
+     * @see com.google.common.collect.Range&lt;?&gt;
+     */
+    public List&lt;Range&lt;?&gt;&gt; minMaxes() {
+<span class="fc" id="L55">        return minMaxes;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
