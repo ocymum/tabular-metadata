@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TabularScanner.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata</a> &gt; <span class="el_source">TabularScanner.java</span></div><h1>TabularScanner.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata;
+
+import static com.google.common.collect.Iterators.advance;
+import static com.google.common.collect.Iterators.cycle;
+import static com.google.common.collect.Iterators.peekingIterator;
+import static com.google.common.collect.Lists.newArrayListWithCapacity;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+
+import com.asoroka.sidora.tabularmetadata.heuristics.DataTypeHeuristic;
+import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.PeekingIterator;
+
+/**
+ * Value scanning workflow. Handed a {@link CSVParser}, this class will scan through it and supply the values of
+ * fields to a &quot;row&quot; of {@link DataTypeHeuristic} strategies cloned from the configured choice.
+ * 
+ * @author ajs6f
+ */
+public class TabularScanner extends AbstractIterator&lt;CSVRecord&gt; {
+
+    private final PeekingIterator&lt;CSVRecord&gt; internalScanner;
+
+    private final Iterator&lt;DataTypeHeuristic&lt;?&gt;&gt; strategies;
+
+    private final List&lt;DataTypeHeuristic&lt;?&gt;&gt; rowOfStrategies;
+
+<span class="fc" id="L35">    private static final Logger log = getLogger(TabularScanner.class);</span>
+
+    public TabularScanner(final CSVParser parser, final DataTypeHeuristic&lt;?&gt; strategy) {
+<span class="fc" id="L38">        super();</span>
+<span class="fc" id="L39">        this.internalScanner = peekingIterator(parser.iterator());</span>
+<span class="fc" id="L40">        final int numColumns = internalScanner.peek().size();</span>
+
+<span class="fc" id="L42">        log.debug(&quot;Found {} columns in our data.&quot;, numColumns);</span>
+        // create a &quot;row&quot; of strategy instances of the same length as the rows in our CSV
+<span class="fc" id="L44">        this.rowOfStrategies = newArrayListWithCapacity(numColumns);</span>
+<span class="fc bfc" id="L45" title="All 2 branches covered.">        for (int i = 0; i &lt; numColumns; i++) {</span>
+<span class="fc" id="L46">            rowOfStrategies.add(strategy.clone());</span>
+        }
+        // this.strategies will cycle endlessly around our row
+<span class="fc" id="L49">        this.strategies = cycle(rowOfStrategies);</span>
+<span class="fc" id="L50">    }</span>
+
+    @Override
+    protected CSVRecord computeNext() {
+<span class="fc bfc" id="L54" title="All 2 branches covered.">        if (internalScanner.hasNext()) {</span>
+<span class="fc" id="L55">            final CSVRecord nextRecord = internalScanner.next();</span>
+<span class="fc bfc" id="L56" title="All 2 branches covered.">            for (final String value : nextRecord) {</span>
+<span class="fc" id="L57">                strategies.next().addValue(value);</span>
+<span class="fc" id="L58">            }</span>
+<span class="fc" id="L59">            return nextRecord;</span>
+        }
+<span class="fc" id="L61">        return endOfData();</span>
+    }
+
+    /**
+     * Scan rows in our CSV up to a limit, exhausting values from the internal parser as we do. &lt;br/&gt;
+     * WARNING: Be careful about calling this more than once on a {@link TabularScanner}. The internal parser of a
+     * scanner cannot be reset.
+     * 
+     * @param limit The number of rows to scan, 0 for all rows.
+     */
+    public void scan(final int limit) {
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        if (limit == 0) {</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">            while (hasNext()) {</span>
+<span class="fc" id="L74">                next();</span>
+            }
+        } else {
+<span class="fc" id="L77">            advance(this, limit);</span>
+        }
+<span class="fc" id="L79">    }</span>
+
+    /**
+     * Use this to recover and interrogate the strategy instances used in scanning.
+     * 
+     * @return the row of strategies used to determine the types of fields
+     */
+    public List&lt;DataTypeHeuristic&lt;?&gt;&gt; getStrategies() {
+<span class="fc" id="L87">        return rowOfStrategies;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
