@@ -33,8 +33,8 @@
 <a class="jxr_linenumber" name="23" href="#23">23</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.formats.TabularFormat;
 <a class="jxr_linenumber" name="24" href="#24">24</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.heuristics.DataTypeHeuristic;
 <a class="jxr_linenumber" name="25" href="#25">25</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.heuristics.HeaderHeuristic;
-<a class="jxr_linenumber" name="26" href="#26">26</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.heuristics.StrictHeuristic;
-<a class="jxr_linenumber" name="27" href="#27">27</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.heuristics.HeaderHeuristic.Default;
+<a class="jxr_linenumber" name="26" href="#26">26</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.heuristics.HeaderHeuristic.Default;
+<a class="jxr_linenumber" name="27" href="#27">27</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.heuristics.StrictHeuristic;
 <a class="jxr_linenumber" name="28" href="#28">28</a>  <strong class="jxr_keyword">import</strong> com.google.common.base.Function;
 <a class="jxr_linenumber" name="29" href="#29">29</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.Range;
 <a class="jxr_linenumber" name="30" href="#30">30</a>  
@@ -112,7 +112,7 @@
 <a class="jxr_linenumber" name="102" href="#102">102</a>     <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> List&lt;String&gt; emptyHeaders = emptyList();
 <a class="jxr_linenumber" name="103" href="#103">103</a> 
 <a class="jxr_linenumber" name="104" href="#104">104</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="105" href="#105">105</a> <em class="jxr_javadoccomment">     * @param scanLimit A limit to the number of rows to scan.</em>
+<a class="jxr_linenumber" name="105" href="#105">105</a> <em class="jxr_javadoccomment">     * @param scanLimit A limit to the number of rows to scan. {@code 0} indicates no limit.</em>
 <a class="jxr_linenumber" name="106" href="#106">106</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="107" href="#107">107</a>     <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> setScanLimit(<strong class="jxr_keyword">final</strong> Integer scanLimit) {
 <a class="jxr_linenumber" name="108" href="#108">108</a>         <strong class="jxr_keyword">this</strong>.scanLimit = scanLimit;

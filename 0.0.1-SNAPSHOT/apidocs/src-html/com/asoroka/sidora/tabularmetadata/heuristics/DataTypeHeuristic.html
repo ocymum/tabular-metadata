@@ -42,7 +42,7 @@
 <span class="sourceLineNo">034</span>    /**<a name="line.34"></a>
 <span class="sourceLineNo">035</span>     * @return The range taken on by proffered values in the value space of the most likely type.<a name="line.35"></a>
 <span class="sourceLineNo">036</span>     */<a name="line.36"></a>
-<span class="sourceLineNo">037</span>    public Range&lt;?&gt; getRange();<a name="line.37"></a>
+<span class="sourceLineNo">037</span>    public &lt;MinMax extends Comparable&lt;MinMax&gt;&gt; Range&lt;MinMax&gt; getRange();<a name="line.37"></a>
 <span class="sourceLineNo">038</span><a name="line.38"></a>
 <span class="sourceLineNo">039</span>    /**<a name="line.39"></a>
 <span class="sourceLineNo">040</span>     * We override {@link Object#clone()} in order to narrow its return type for type-safety.<a name="line.40"></a>

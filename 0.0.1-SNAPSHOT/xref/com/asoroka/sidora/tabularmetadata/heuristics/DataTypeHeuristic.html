@@ -44,7 +44,7 @@
 <a class="jxr_linenumber" name="34" href="#34">34</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="35" href="#35">35</a>  <em class="jxr_javadoccomment">     * @return The range taken on by proffered values in the value space of the most likely type.</em>
 <a class="jxr_linenumber" name="36" href="#36">36</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="37" href="#37">37</a>      <strong class="jxr_keyword">public</strong> Range&lt;?&gt; getRange();
+<a class="jxr_linenumber" name="37" href="#37">37</a>      <strong class="jxr_keyword">public</strong> &lt;MinMax <strong class="jxr_keyword">extends</strong> Comparable&lt;MinMax&gt;&gt; Range&lt;MinMax&gt; getRange();
 <a class="jxr_linenumber" name="38" href="#38">38</a>  
 <a class="jxr_linenumber" name="39" href="#39">39</a>      <em class="jxr_javadoccomment">/**</em>
 <a class="jxr_linenumber" name="40" href="#40">40</a>  <em class="jxr_javadoccomment">     * We override {@link Object#clone()} in order to narrow its return type for type-safety.</em>
