@@ -24,7 +24,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 import org.slf4j.Logger;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.asoroka.sidora.tabularmetadata.heuristics.DataTypeHeuristic;
 import com.google.common.base.Function;
 
@@ -32,14 +32,14 @@ import com.google.common.base.Function;
 public class TabularScannerTest {
 
     @Mock
-    DataType mockDataType;
+    ValueType mockDataType;
 
     @Mock
     DataTypeHeuristic<?> mockStrategy;
 
     private static final File smalltestfile = new File("src/test/resources/test-data/small-test.csv");
 
-    private ArrayList<DataType> expectedResults;
+    private ArrayList<ValueType> expectedResults;
 
     private static final Logger log = getLogger(TabularScannerTest.class);
 
@@ -57,7 +57,7 @@ public class TabularScannerTest {
             testScanner = new TabularScanner(parser, cloneableMockStrategy(mockStrategy));
             testScanner.scan(0);
         }
-        final List<DataType> guesses =
+        final List<ValueType> guesses =
                 transform(testScanner.getStrategies(), getMostLikelyType);
         assertEquals("Failed to find the correct column types!", expectedResults, guesses);
     }
@@ -70,7 +70,7 @@ public class TabularScannerTest {
             testScanner = new TabularScanner(parser, cloneableMockStrategy(mockStrategy));
             testScanner.scan(2);
         }
-        final List<DataType> guesses =
+        final List<ValueType> guesses =
                 transform(testScanner.getStrategies(), getMostLikelyType);
         assertEquals("Failed to find the correct column types!", expectedResults, guesses);
     }
@@ -78,11 +78,11 @@ public class TabularScannerTest {
     /**
      * Extracts the most likely type selection from a {@link DataTypeHeuristic}
      */
-    private static final Function<DataTypeHeuristic<?>, DataType> getMostLikelyType =
-            new Function<DataTypeHeuristic<?>, DataType>() {
+    private static final Function<DataTypeHeuristic<?>, ValueType> getMostLikelyType =
+            new Function<DataTypeHeuristic<?>, ValueType>() {
 
                 @Override
-                public DataType apply(final DataTypeHeuristic<?> heuristic) {
+                public ValueType apply(final DataTypeHeuristic<?> heuristic) {
                     return heuristic.mostLikelyType();
                 }
             };

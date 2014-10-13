@@ -5,21 +5,21 @@
 
 package com.asoroka.sidora.tabularmetadata.datatype;
 
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Boolean;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.DateTime;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Decimal;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Geographic;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Integer;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.NonNegativeInteger;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.PositiveInteger;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.String;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.URI;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.parseableAs;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.sortByHierarchy;
+import static com.asoroka.sidora.tabularmetadata.datatype.Boolean.BOOLEAN;
+import static com.asoroka.sidora.tabularmetadata.datatype.DateTime.DATETIME;
+import static com.asoroka.sidora.tabularmetadata.datatype.Decimal.DECIMAL;
+import static com.asoroka.sidora.tabularmetadata.datatype.Geographic.GEOGRAPHIC;
+import static com.asoroka.sidora.tabularmetadata.datatype.Integer.INTEGER;
+import static com.asoroka.sidora.tabularmetadata.datatype.NonNegativeInteger.NONNEGATIVEINTEGER;;
+import static com.asoroka.sidora.tabularmetadata.datatype.PositiveInteger.POSITIVEINTEGER;
+import static com.asoroka.sidora.tabularmetadata.datatype.Lex.LEX;
+import static com.asoroka.sidora.tabularmetadata.datatype.URI.URI;
+import static com.asoroka.sidora.tabularmetadata.datatype.SIdoraTypeSystem.parseableAsTypes;
+
 import static com.google.common.collect.ImmutableMap.builder;
 import static com.google.common.collect.Sets.newHashSet;
 import static java.util.Arrays.asList;
-import static java.util.EnumSet.of;
+import static com.google.common.collect.ImmutableSet.of;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -33,34 +33,34 @@ import org.junit.Test;
 
 import com.google.common.collect.ImmutableMap;
 
-public class DataTypeTest {
+public class SIDoraTypeSystemTest {
 
     // private static final Logger log = getLogger(DataTypeTest.class);
 
-    private static Map<DataType, Set<DataType>> expectedParseableTypes;
+    private static Map<ValueType, Set<ValueType>> expectedParseableTypes;
 
-    private static Map<DataType, Set<DataType>> expectedSuperTypes;
+    private static Map<ValueType, Set<ValueType>> expectedSuperTypes;
 
-    private static Map<DataType, Set<String>> sampleValues;
+    private static Map<ValueType, Set<String>> sampleValues;
 
-    private static Map<String, DataType> dataTypeNames;
+    private static Map<String, ValueType> dataTypeNames;
 
     static {
-        final ImmutableMap.Builder<DataType, Set<DataType>> b = builder();
+        final ImmutableMap.Builder<ValueType, Set<ValueType>> b = builder();
 
-        b.put(PositiveInteger, of(String, Decimal, Integer, NonNegativeInteger, PositiveInteger, DateTime));
-        b.put(NonNegativeInteger, of(String, Decimal, Integer, NonNegativeInteger, DateTime));
-        b.put(Integer, of(String, Decimal, Integer, DateTime));
-        b.put(Decimal, of(String, Decimal));
-        b.put(Geographic, of(Geographic, String));
-        b.put(Boolean, of(Boolean, String));
-        b.put(DateTime, of(DateTime, String));
-        b.put(String, of(String));
-        b.put(URI, of(URI, String));
+        b.put(POSITIVEINTEGER, (Set<ValueType>)of(LEX, DECIMAL, INTEGER, NONNEGATIVEINTEGER, POSITIVEINTEGER, DATETIME));
+        b.put(NONNEGATIVEINTEGER, of(LEX, DECIMAL, INTEGER, NONNEGATIVEINTEGER, DATETIME));
+        b.put(INTEGER, of(LEX, DECIMAL, INTEGER, DATETIME));
+        b.put(DECIMAL, of(LEX, DECIMAL));
+        b.put(GEOGRAPHIC, of(GEOGRAPHIC, LEX));
+        b.put(BOOLEAN, of(BOOLEAN, LEX));
+        b.put(DATETIME, of(DATETIME, LEX));
+        b.put(LEX, of(LEX));
+        b.put(URI, of(URI, LEX));
 
         expectedParseableTypes = b.build();
 
-        final ImmutableMap.Builder<DataType, Set<DataType>> b2 = builder();
+        final ImmutableMap.Builder<ValueType, Set<ValueType>> b2 = builder();
 
         b2.put(PositiveInteger, of(String, Decimal, Integer, NonNegativeInteger, PositiveInteger));
         b2.put(NonNegativeInteger, of(String, Decimal, Integer, NonNegativeInteger));
@@ -74,7 +74,7 @@ public class DataTypeTest {
 
         expectedSuperTypes = b2.build();
 
-        final ImmutableMap.Builder<DataType, Set<String>> b3 = builder();
+        final ImmutableMap.Builder<ValueType, Set<String>> b3 = builder();
 
         b3.put(PositiveInteger, newHashSet("123", "9000"));
         b3.put(NonNegativeInteger, newHashSet("0"));
@@ -88,7 +88,7 @@ public class DataTypeTest {
 
         sampleValues = b3.build();
 
-        final ImmutableMap.Builder<String, DataType> b4 = builder();
+        final ImmutableMap.Builder<String, ValueType> b4 = builder();
 
         b4.putAll(ImmutableMap.of("PositiveInteger", PositiveInteger, "NonNegativeInteger", NonNegativeInteger,
                 "Integer", Integer));
@@ -100,9 +100,9 @@ public class DataTypeTest {
 
     @Test
     public void testCorrectParsingOfValues() {
-        for (final DataType testType : DataType.values()) {
+        for (final ValueType testType : ValueType.values()) {
             for (final String testValue : sampleValues.get(testType)) {
-                final Set<DataType> result = parseableAs(testValue);
+                final Set<ValueType> result = parseableAs(testValue);
                 assertEquals("Did not find the appropriate datatypes suggested as parseable for a " + testType + "!",
                         expectedParseableTypes
                                 .get(testType), result);
@@ -112,8 +112,8 @@ public class DataTypeTest {
 
     @Test
     public void testSupertypes() {
-        for (final DataType testDatatype : DataType.values()) {
-            final Set<DataType> result = testDatatype.supertypes();
+        for (final ValueType testDatatype : ValueType.values()) {
+            final Set<ValueType> result = testDatatype.supertypes();
             assertEquals("Did not find the appropriate supertypes for" + testDatatype + "!", expectedSuperTypes
                     .get(testDatatype), result);
         }
@@ -121,9 +121,9 @@ public class DataTypeTest {
 
     @Test
     public void testOrderingByHierarchy() {
-        List<DataType> listToBeSorted = asList(Decimal, PositiveInteger, Integer, NonNegativeInteger, String);
-        List<DataType> listInCorrectSorting = asList(PositiveInteger, NonNegativeInteger, Integer, Decimal, String);
-        List<DataType> sorted = new ArrayList<>(sortByHierarchy(listToBeSorted));
+        List<ValueType> listToBeSorted = asList(Decimal, PositiveInteger, Integer, NonNegativeInteger, String);
+        List<ValueType> listInCorrectSorting = asList(PositiveInteger, NonNegativeInteger, Integer, Decimal, String);
+        List<ValueType> sorted = new ArrayList<>(sortByHierarchy(listToBeSorted));
         assertEquals("Got wrong ordering by hierarchy of datatypes!", listInCorrectSorting, sorted);
 
         listToBeSorted = asList(String, Geographic);
@@ -207,9 +207,9 @@ public class DataTypeTest {
     public void testNames() {
         assertEquals(
                 "Our test datatype names are fewer or greater in number than the number of actual DataTypes!",
-                DataType.values().length, dataTypeNames.size());
+                ValueType.values().length, dataTypeNames.size());
         for (final String name : dataTypeNames.keySet()) {
-            assertEquals(dataTypeNames.get(name), DataType.valueOf(name));
+            assertEquals(dataTypeNames.get(name), ValueType.valueOf(name));
         }
     }
 

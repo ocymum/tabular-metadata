@@ -1,7 +1,7 @@
 
 package com.asoroka.sidora.tabularmetadata.heuristics;
 
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.PositiveInteger;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.PositiveInteger;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 
@@ -9,7 +9,7 @@ import java.util.List;
 
 import org.junit.Test;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 
 public class MinimumDistanceBetweenNonparseablesHeuristicTest extends
         DataTypeHeuristicTestFrame<MinimumDistanceBetweenNonparseablesHeuristic> {
@@ -38,6 +38,6 @@ public class MinimumDistanceBetweenNonparseablesHeuristicTest extends
             testStrategy.addValue(i);
         }
         assertEquals("Failed to reject types with nonparseable values greater than the minimum distance apart!",
-                DataType.String, testStrategy.mostLikelyType());
+                ValueType.String, testStrategy.mostLikelyType());
     }
 }

@@ -1,15 +1,15 @@
 
 package com.asoroka.sidora.tabularmetadata.heuristics;
 
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Boolean;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.DateTime;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Decimal;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Geographic;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Integer;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.NonNegativeInteger;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.PositiveInteger;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.String;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.URI;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.Boolean;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.DateTime;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.Decimal;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.Geographic;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.Integer;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.NonNegativeInteger;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.PositiveInteger;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.String;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.URI;
 import static com.google.common.collect.ImmutableList.of;
 
 import java.util.EnumMap;
@@ -18,19 +18,19 @@ import java.util.Map;
 
 import org.junit.Before;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 
 public abstract class CountAggregatingHeuristicTestFrame<T extends CountAggregatingHeuristic<T>> extends
         RunningMinMaxHeuristicTestFrame<CountAggregatingHeuristic<T>> {
 
-    protected static Map<DataType, List<String>> parseableValues;
+    protected static Map<ValueType, List<String>> parseableValues;
 
-    protected static Map<DataType, List<String>> oneNonparseableValue;
+    protected static Map<ValueType, List<String>> oneNonparseableValue;
 
     @Before
     public void setUp() {
-        parseableValues = new EnumMap<>(DataType.class);
-        oneNonparseableValue = new EnumMap<>(DataType.class);
+        parseableValues = new EnumMap<>(ValueType.class);
+        oneNonparseableValue = new EnumMap<>(ValueType.class);
         // these are all parseable values for the datatype to which they are assigned
         parseableValues.put(String, of("Jane", "John", "Sarah", "Simon"));
         parseableValues.put(Decimal, of("0.0", "2220.19999", "-13452", "34.345"));

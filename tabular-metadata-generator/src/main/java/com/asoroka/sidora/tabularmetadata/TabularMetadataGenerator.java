@@ -20,7 +20,7 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.asoroka.sidora.tabularmetadata.formats.TabularFormat;
 import com.asoroka.sidora.tabularmetadata.heuristics.DataTypeHeuristic;
 import com.asoroka.sidora.tabularmetadata.heuristics.HeaderHeuristic;
@@ -75,17 +75,17 @@ public class TabularMetadataGenerator {
             strategies = scanner.getStrategies();
         }
         // extract the results for each field
-        final List<SortedSet<DataType>> columnTypes = transform(strategies, extractType);
+        final List<SortedSet<ValueType>> columnTypes = transform(strategies, extractType);
         final List<Range<?>> minMaxes = transform(strategies, extractMinMax);
 
         return new TabularMetadata(headerNames, columnTypes, minMaxes);
     }
 
-    private static final Function<DataTypeHeuristic<?>, SortedSet<DataType>> extractType =
-            new Function<DataTypeHeuristic<?>, SortedSet<DataType>>() {
+    private static final Function<DataTypeHeuristic<?>, SortedSet<ValueType>> extractType =
+            new Function<DataTypeHeuristic<?>, SortedSet<ValueType>>() {
 
                 @Override
-                public SortedSet<DataType> apply(final DataTypeHeuristic<?> strategy) {
+                public SortedSet<ValueType> apply(final DataTypeHeuristic<?> strategy) {
                     return strategy.typesAsLikely();
                 }
             };

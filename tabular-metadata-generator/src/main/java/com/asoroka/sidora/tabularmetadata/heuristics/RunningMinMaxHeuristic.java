@@ -5,7 +5,7 @@
 
 package com.asoroka.sidora.tabularmetadata.heuristics;
 
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.parseableAs;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.parseableAs;
 import static com.google.common.collect.Maps.asMap;
 import static com.google.common.collect.Ordering.natural;
 import static java.util.Objects.hash;
@@ -13,7 +13,7 @@ import static java.util.Objects.hash;
 import java.util.EnumMap;
 import java.util.Map;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.asoroka.sidora.tabularmetadata.datatype.ParsingException;
 import com.google.common.base.Function;
 import com.google.common.collect.Range;
@@ -29,17 +29,17 @@ public abstract class RunningMinMaxHeuristic<T extends RunningMinMaxHeuristic<T>
     /**
      * A {@link Map} from data types to the minimum value from all presented values that were parseable in that type.
      */
-    protected Map<DataType, Comparable<?>> minimums = new EnumMap<>(DataType.class);
+    protected Map<ValueType, Comparable<?>> minimums = new EnumMap<>(ValueType.class);
 
     /**
      * A {@link Map} from data types to the maximum value from all presented values that were parseable in that type.
      */
-    protected Map<DataType, Comparable<?>> maximums = new EnumMap<>(DataType.class);
+    protected Map<ValueType, Comparable<?>> maximums = new EnumMap<>(ValueType.class);
 
     @Override
     public void addValue(final String value) {
         super.addValue(value);
-        for (final DataType type : parseableAs(value)) {
+        for (final ValueType type : parseableAs(value)) {
             final Comparable<?> currentMin = minimums.get(type);
             final Comparable<?> currentMax = maximums.get(type);
             try {
@@ -55,15 +55,15 @@ public abstract class RunningMinMaxHeuristic<T extends RunningMinMaxHeuristic<T>
     }
 
     @Override
-    public Map<DataType, Range<?>> getRanges() {
+    public Map<ValueType, Range<?>> getRanges() {
         return asMap(typesAsLikely(), getRangeForType());
     }
 
-    private Function<DataType, Range<?>> getRangeForType() {
-        return new Function<DataType, Range<?>>() {
+    private Function<ValueType, Range<?>> getRangeForType() {
+        return new Function<ValueType, Range<?>>() {
 
             @Override
-            public Range<?> apply(final DataType type) {
+            public Range<?> apply(final ValueType type) {
                 // the following could be shortened to three comparisons, but at a cost in clarity
                 if (minimums.containsKey(type) && maximums.containsKey(type)) {
                     return Range.closed(minimums.get(type), maximums.get(type));
@@ -81,7 +81,7 @@ public abstract class RunningMinMaxHeuristic<T extends RunningMinMaxHeuristic<T>
 
     @Override
     public <MinMax extends Comparable<MinMax>> Range<MinMax> getRange() {
-        final DataType mostLikelyType = mostLikelyType();
+        final ValueType mostLikelyType = mostLikelyType();
         return (Range<MinMax>) getRanges().get(mostLikelyType);
     }
 

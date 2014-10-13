@@ -1,7 +1,7 @@
 
 package com.asoroka.sidora.tabularmetadata.heuristics;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.google.common.collect.Range;
 
 /**
@@ -11,7 +11,7 @@ public abstract class AbstractDataTypeHeuristic<T extends AbstractDataTypeHeuris
         DataTypeHeuristic<T> {
 
     @Override
-    public DataType mostLikelyType() {
+    public ValueType mostLikelyType() {
         return typesAsLikely().first();
     }
 

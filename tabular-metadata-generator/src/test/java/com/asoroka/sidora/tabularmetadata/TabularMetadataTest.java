@@ -11,7 +11,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.google.common.collect.Range;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -21,7 +21,7 @@ public class TabularMetadataTest {
     private List<String> mockHeaderNames;
 
     @Mock
-    private List<SortedSet<DataType>> mockTypes;
+    private List<SortedSet<ValueType>> mockTypes;
 
     @Mock
     private List<Range<?>> mockRanges;

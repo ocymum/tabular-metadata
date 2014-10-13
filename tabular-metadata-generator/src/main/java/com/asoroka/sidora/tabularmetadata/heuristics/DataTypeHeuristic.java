@@ -10,11 +10,11 @@ import java.util.SortedSet;
 
 import javax.inject.Provider;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.google.common.collect.Range;
 
 /**
- * Determines into which {@link DataType} a series of values most likely falls, and determines a range for the
+ * Determines into which {@link ValueType} a series of values most likely falls, and determines a range for the
  * supplied values. Generally, implementations of this type should be used <i>only</i> on a single series of values
  * drawn from a single column of a single tabular data set: it is expected that implementations will maintain state
  * that cannot be reset for reuse.
@@ -27,13 +27,13 @@ public interface DataTypeHeuristic<T extends DataTypeHeuristic<T>> extends Clone
     /**
      * @return Types for the proffered values in order of their likelihood according to this heuristic.
      */
-    public SortedSet<DataType> typesAsLikely();
+    public SortedSet<ValueType> typesAsLikely();
 
     /**
      * @return The single most likely type for the proffered values according to this heuristic. Under any normal
      *         regime, this should be equal to {@code typesAsLikely().first()}.
      */
-    public DataType mostLikelyType();
+    public ValueType mostLikelyType();
 
     /**
      * Provide a value to this heuristic for consideration.
@@ -51,7 +51,7 @@ public interface DataTypeHeuristic<T extends DataTypeHeuristic<T>> extends Clone
     /**
      * @return The ranges taken on by all values in the Java value space associated to each type.
      */
-    public Map<DataType, Range<?>> getRanges();
+    public Map<ValueType, Range<?>> getRanges();
 
     /**
      * We override {@link Object#clone()} in order to narrow its return type for type-safety in the use of this

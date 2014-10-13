@@ -1,8 +1,8 @@
 
 package com.asoroka.sidora.tabularmetadata;
 
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.Geographic;
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.sortByHierarchy;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.Geographic;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.sortByHierarchy;
 import static com.asoroka.sidora.tabularmetadata.test.TestUtilities.cloneableMockStrategy;
 import static com.google.common.base.Predicates.equalTo;
 import static com.google.common.collect.Iterables.all;
@@ -36,7 +36,7 @@ import org.mockito.internal.stubbing.answers.Returns;
 import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.asoroka.sidora.tabularmetadata.formats.TabularFormat;
 import com.asoroka.sidora.tabularmetadata.heuristics.DataTypeHeuristic;
 import com.asoroka.sidora.tabularmetadata.heuristics.HeaderHeuristic;
@@ -75,7 +75,7 @@ public class TabularMetadataGeneratorTest {
     private HeaderHeuristic<?> mockHeaderHeuristic;
 
     @Mock
-    private DataType mockDataType;
+    private ValueType mockDataType;
 
     private Returns mockDataTypeAnswer = new Returns(mockDataType);
 
@@ -105,13 +105,13 @@ public class TabularMetadataGeneratorTest {
         final TabularMetadata results = testParser.getMetadata(mockURL);
 
         final List<String> headers = results.headerNames();
-        final List<SortedSet<DataType>> types = results.fieldTypes();
+        final List<SortedSet<ValueType>> types = results.fieldTypes();
         @SuppressWarnings("rawtypes")
         // we ignore type-safety here for a simpler unit test
         final List ranges = results.minMaxes();
 
         assertEquals(asList(testHeaders.split(",")), headers);
-        for (final Set<DataType> eachType : types) {
+        for (final Set<ValueType> eachType : types) {
             assertTrue(all(eachType, equalTo(mockDataType)));
         }
         @SuppressWarnings("unchecked")
@@ -129,8 +129,8 @@ public class TabularMetadataGeneratorTest {
         testParser.setHeaderStrategy(mockHeaderHeuristic);
         final TabularMetadata results = testParser.getMetadata(mockURL);
 
-        final List<SortedSet<DataType>> types = results.fieldTypes();
-        for (final Set<DataType> eachType : types) {
+        final List<SortedSet<ValueType>> types = results.fieldTypes();
+        for (final Set<ValueType> eachType : types) {
             assertTrue(all(eachType, equalTo(mockDataType)));
         }
         @SuppressWarnings("rawtypes")
@@ -154,8 +154,8 @@ public class TabularMetadataGeneratorTest {
         testParser.setHeaderStrategy(mockHeaderHeuristic);
         final TabularMetadata results = testParser.getMetadata(mockURL);
 
-        final List<SortedSet<DataType>> types = results.fieldTypes();
-        for (final Set<DataType> eachType : types) {
+        final List<SortedSet<ValueType>> types = results.fieldTypes();
+        for (final Set<ValueType> eachType : types) {
             assertTrue(all(eachType, equalTo(mockDataType)));
         }
         @SuppressWarnings("rawtypes")
@@ -224,7 +224,7 @@ public class TabularMetadataGeneratorTest {
         public boolean failure = false;
 
         @Override
-        public SortedSet<DataType> typesAsLikely() {
+        public SortedSet<ValueType> typesAsLikely() {
             return sortByHierarchy(singleton(Geographic));
         }
 
@@ -252,13 +252,13 @@ public class TabularMetadataGeneratorTest {
         }
 
         @Override
-        public DataType mostLikelyType() {
+        public ValueType mostLikelyType() {
             // TODO Auto-generated method stub
             return null;
         }
 
         @Override
-        public Map<DataType, Range<?>> getRanges() {
+        public Map<ValueType, Range<?>> getRanges() {
             // TODO Auto-generated method stub
             return null;
         }

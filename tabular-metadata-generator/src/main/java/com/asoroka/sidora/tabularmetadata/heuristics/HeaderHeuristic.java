@@ -1,13 +1,13 @@
 
 package com.asoroka.sidora.tabularmetadata.heuristics;
 
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.parseableAs;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.parseableAs;
 import static com.google.common.collect.Iterables.all;
 import static java.util.Collections.singleton;
 
 import javax.inject.Provider;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.google.common.base.Predicate;
 
 /**
@@ -39,7 +39,7 @@ public interface HeaderHeuristic<T extends HeaderHeuristic<T>> extends Predicate
 
     /**
      * This is a very simple test of whether a line is a header line. Only any line in which each field parses only as
-     * a {@link DataType#String} will be accepted.
+     * a {@link ValueType#String} will be accepted.
      */
     public static class Default extends TreatsEachFieldAlikeHeaderHeuristic<Default> {
 
@@ -52,7 +52,7 @@ public interface HeaderHeuristic<T extends HeaderHeuristic<T>> extends Predicate
 
             @Override
             public boolean apply(final String value) {
-                return parseableAs(value).equals(singleton(DataType.String));
+                return parseableAs(value).equals(singleton(ValueType.String));
             }
         };
 

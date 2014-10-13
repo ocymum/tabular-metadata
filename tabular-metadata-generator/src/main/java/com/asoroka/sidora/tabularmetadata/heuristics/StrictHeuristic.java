@@ -5,7 +5,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import org.slf4j.Logger;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 
 /**
  * A very strict heuristic for determining types for CSV fields. This heuristic accepts types only if <i>every</i>
@@ -18,7 +18,7 @@ public class StrictHeuristic extends CountAggregatingHeuristic<StrictHeuristic> 
     private static final Logger log = getLogger(StrictHeuristic.class);
 
     @Override
-    protected boolean candidacy(final DataType type) {
+    protected boolean candidacy(final ValueType type) {
         log.debug("For type {} found {} occurences out of {} total values", type, typeCounts.get(type),
                 totalNumValues());
         return typeCounts.get(type).equals(totalNumValues());

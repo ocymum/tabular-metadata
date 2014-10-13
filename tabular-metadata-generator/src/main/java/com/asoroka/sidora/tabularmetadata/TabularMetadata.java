@@ -4,7 +4,7 @@ package com.asoroka.sidora.tabularmetadata;
 import java.util.List;
 import java.util.SortedSet;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.google.common.collect.Range;
 
 /**
@@ -16,7 +16,7 @@ public class TabularMetadata {
 
     private final List<String> headerNames;
 
-    private final List<SortedSet<DataType>> fieldTypes;
+    private final List<SortedSet<ValueType>> fieldTypes;
 
     private final List<Range<?>> minMaxes;
 
@@ -25,7 +25,7 @@ public class TabularMetadata {
      * @param fieldTypes
      * @param minMaxes
      */
-    public TabularMetadata(final List<String> headerNames, final List<SortedSet<DataType>> fieldTypes,
+    public TabularMetadata(final List<String> headerNames, final List<SortedSet<ValueType>> fieldTypes,
             final List<Range<?>> minMaxes) {
         this.headerNames = headerNames;
         this.fieldTypes = fieldTypes;
@@ -42,7 +42,7 @@ public class TabularMetadata {
     /**
      * @return A list of field datatypes.
      */
-    public List<SortedSet<DataType>> fieldTypes() {
+    public List<SortedSet<ValueType>> fieldTypes() {
         return fieldTypes;
     }
 

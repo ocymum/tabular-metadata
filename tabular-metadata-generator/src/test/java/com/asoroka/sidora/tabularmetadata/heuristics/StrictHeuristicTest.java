@@ -8,7 +8,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 import org.junit.Test;
 import org.slf4j.Logger;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 
 public class StrictHeuristicTest extends CountAggregatingHeuristicTestFrame<StrictHeuristic> {
 
@@ -22,7 +22,7 @@ public class StrictHeuristicTest extends CountAggregatingHeuristicTestFrame<Stri
     @Test
     public void testActionWithParsingValues() {
         log.trace("testActionWithParsingValues()...");
-        for (final DataType testType : DataType.values()) {
+        for (final ValueType testType : ValueType.values()) {
             log.debug("Testing type: {}", testType);
             final StrictHeuristic testHeuristic = newTestHeuristic();
             for (final String testValue : parseableValues.get(testType)) {
@@ -36,7 +36,7 @@ public class StrictHeuristicTest extends CountAggregatingHeuristicTestFrame<Stri
     @Test
     public void testActionWithOneNonparsingValue() {
         log.trace("testActionWithOneNonparsingValue()...");
-        for (final DataType testType : oneNonparseableValue.keySet()) {
+        for (final ValueType testType : oneNonparseableValue.keySet()) {
             final StrictHeuristic testHeuristic = newTestHeuristic();
             for (final String testValue : oneNonparseableValue.get(testType)) {
                 testHeuristic.addValue(testValue);

@@ -6,7 +6,7 @@ import static org.slf4j.LoggerFactory.getLogger;
 
 import org.slf4j.Logger;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 
 /**
  * A heuristic that permits a certain specified fraction of values to fail at parsing to the most likely type.
@@ -28,7 +28,7 @@ public class FractionHeuristic extends CountAggregatingHeuristic<FractionHeurist
     private final float fractionOfAllowedNonparseables;
 
     @Override
-    protected boolean candidacy(final DataType type) {
+    protected boolean candidacy(final ValueType type) {
         final float nonParseableOccurrences = totalNumValues() - typeCounts.get(type);
         log.trace("Found {} nonparseable occurrences out of {} total values for type {}.", nonParseableOccurrences,
                 totalNumValues(), type);

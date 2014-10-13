@@ -15,14 +15,14 @@ import java.util.Set;
 
 import org.slf4j.Logger;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.google.common.base.Predicate;
 
 public class MultiVariateHeuristic extends ChoiceCountAggregatingHeuristic<MultiVariateHeuristic> {
 
-    private Map<DataType, Boolean> candidacies;
+    private Map<ValueType, Boolean> candidacies;
 
-    public Map<DataType, Float> typeLikelihoods;
+    public Map<ValueType, Float> typeLikelihoods;
 
     private final float minimum;
 
@@ -35,16 +35,16 @@ public class MultiVariateHeuristic extends ChoiceCountAggregatingHeuristic<Multi
         super();
         this.minimum = minimum;
 
-        final Set<Set<DataType>> rawPowerSet = powerSet(DataType.valuesSet());
+        final Set<Set<ValueType>> rawPowerSet = powerSet(ValueType.valuesSet());
         final int numChoices = rawPowerSet.size();
         final Float likelihoodPerAppearance = 1 / (float) numChoices;
         log.trace("likelihoodPerAppearance: {}", likelihoodPerAppearance);
-        typeLikelihoods = new EnumMap<>(DataType.class);
-        final Map<DataType, Float> zeroes = toMap(DataType.valuesSet(), constant(0F));
+        typeLikelihoods = new EnumMap<>(ValueType.class);
+        final Map<ValueType, Float> zeroes = toMap(ValueType.valuesSet(), constant(0F));
         typeLikelihoods.putAll(zeroes);
 
-        for (final DataType type : DataType.valuesSet()) {
-            for (final Set<DataType> choice : rawPowerSet) {
+        for (final ValueType type : ValueType.valuesSet()) {
+            for (final Set<ValueType> choice : rawPowerSet) {
                 if (choice.contains(type)) {
                     final Float currentLikelihood = typeLikelihoods.containsKey(type) ? typeLikelihoods.get(type) : 0;
                     log.trace("Current likelihood of {} is {}.", type, currentLikelihood);
@@ -53,18 +53,18 @@ public class MultiVariateHeuristic extends ChoiceCountAggregatingHeuristic<Multi
             }
         }
         // assume all types are out of the running until proven otherwise
-        candidacies = new EnumMap<>(DataType.class);
-        final Map<DataType, Boolean> falses = toMap(DataType.valuesSet(), constant(false));
+        candidacies = new EnumMap<>(ValueType.class);
+        final Map<ValueType, Boolean> falses = toMap(ValueType.valuesSet(), constant(false));
         candidacies.putAll(falses);
 
     }
 
     @Override
-    protected boolean candidacy(final DataType type) {
+    protected boolean candidacy(final ValueType type) {
 
         // determine which types are acceptable
-        final Set<Entry<DataType, Boolean>> entrySet = candidacies.entrySet();
-        final Collection<Entry<DataType, Boolean>> candidates = filter(entrySet, valueTrue);
+        final Set<Entry<ValueType, Boolean>> entrySet = candidacies.entrySet();
+        final Collection<Entry<ValueType, Boolean>> candidates = filter(entrySet, valueTrue);
         return candidates.contains(type);
     }
 
@@ -73,11 +73,11 @@ public class MultiVariateHeuristic extends ChoiceCountAggregatingHeuristic<Multi
         return this;
     }
 
-    private static final Predicate<Entry<DataType, Boolean>> valueTrue =
-            new Predicate<Entry<DataType, Boolean>>() {
+    private static final Predicate<Entry<ValueType, Boolean>> valueTrue =
+            new Predicate<Entry<ValueType, Boolean>>() {
 
                 @Override
-                public boolean apply(final Entry<DataType, Boolean> e) {
+                public boolean apply(final Entry<ValueType, Boolean> e) {
                     return e.getValue();
                 }
             };

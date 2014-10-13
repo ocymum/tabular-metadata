@@ -9,7 +9,7 @@ import java.util.SortedSet;
 
 import org.junit.Test;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 import com.google.common.collect.Range;
 
 public abstract class DataTypeHeuristicTestFrame<T extends DataTypeHeuristic<T>> {
@@ -55,7 +55,7 @@ public abstract class DataTypeHeuristicTestFrame<T extends DataTypeHeuristic<T>>
         }
 
         @Override
-        public SortedSet<DataType> typesAsLikely() {
+        public SortedSet<ValueType> typesAsLikely() {
             // NO OP
             return null;
         }
@@ -72,13 +72,13 @@ public abstract class DataTypeHeuristicTestFrame<T extends DataTypeHeuristic<T>>
         }
 
         @Override
-        public DataType mostLikelyType() {
+        public ValueType mostLikelyType() {
             // NO OP
             return null;
         }
 
         @Override
-        public Map<DataType, Range<?>> getRanges() {
+        public Map<ValueType, Range<?>> getRanges() {
             // TODO Auto-generated method stub
             return null;
         }

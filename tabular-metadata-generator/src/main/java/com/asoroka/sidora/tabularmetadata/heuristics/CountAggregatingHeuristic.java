@@ -5,7 +5,7 @@
 
 package com.asoroka.sidora.tabularmetadata.heuristics;
 
-import static com.asoroka.sidora.tabularmetadata.datatype.DataType.parseableAs;
+import static com.asoroka.sidora.tabularmetadata.datatype.ValueType.parseableAs;
 import static com.google.common.base.Functions.constant;
 import static com.google.common.collect.Maps.toMap;
 import static java.util.Objects.hash;
@@ -17,7 +17,7 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 
-import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.datatype.ValueType;
 
 /**
  * A {@link DataTypeHeuristic} that aggregates candidate type appearance information for its field.
@@ -31,7 +31,7 @@ public abstract class CountAggregatingHeuristic<T extends CountAggregatingHeuris
     /**
      * In this {@link Map}, we aggregate counts of parseable values for each datatype.
      */
-    protected final EnumMap<DataType, Integer> typeCounts = new EnumMap<>(DataType.class);
+    protected final EnumMap<ValueType, Integer> typeCounts = new EnumMap<>(ValueType.class);
 
     private static final Logger log = getLogger(CountAggregatingHeuristic.class);
 
@@ -39,7 +39,7 @@ public abstract class CountAggregatingHeuristic<T extends CountAggregatingHeuris
      * Initialize counts for each datatype.
      */
     public CountAggregatingHeuristic() {
-        final Map<DataType, Integer> zeroes = toMap(DataType.valuesSet(), constant(0));
+        final Map<ValueType, Integer> zeroes = toMap(ValueType.valuesSet(), constant(0));
         typeCounts.putAll(zeroes);
     }
 
@@ -49,8 +49,8 @@ public abstract class CountAggregatingHeuristic<T extends CountAggregatingHeuris
         incrementCounts(parseableAs(value));
     }
 
-    private void incrementCounts(final Collection<DataType> types) {
-        for (final DataType type : types) {
+    private void incrementCounts(final Collection<ValueType> types) {
+        for (final ValueType type : types) {
             typeCounts.put(type, typeCounts.get(type) + 1);
         }
     }
