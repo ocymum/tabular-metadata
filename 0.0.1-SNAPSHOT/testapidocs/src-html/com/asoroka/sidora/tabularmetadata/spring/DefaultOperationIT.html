@@ -9,26 +9,37 @@
 <pre><span class="sourceLineNo">001</span><a name="line.1"></a>
 <span class="sourceLineNo">002</span>package com.asoroka.sidora.tabularmetadata.spring;<a name="line.2"></a>
 <span class="sourceLineNo">003</span><a name="line.3"></a>
-<span class="sourceLineNo">004</span>import java.io.IOException;<a name="line.4"></a>
-<span class="sourceLineNo">005</span>import java.net.MalformedURLException;<a name="line.5"></a>
+<span class="sourceLineNo">004</span>import static com.google.common.collect.Sets.newHashSet;<a name="line.4"></a>
+<span class="sourceLineNo">005</span>import static org.junit.Assert.assertEquals;<a name="line.5"></a>
 <span class="sourceLineNo">006</span><a name="line.6"></a>
-<span class="sourceLineNo">007</span>import org.junit.Test;<a name="line.7"></a>
-<span class="sourceLineNo">008</span>import org.springframework.test.context.ContextConfiguration;<a name="line.8"></a>
-<span class="sourceLineNo">009</span><a name="line.9"></a>
-<span class="sourceLineNo">010</span>@ContextConfiguration("/spring-xml/default-operation.xml")<a name="line.10"></a>
-<span class="sourceLineNo">011</span>public class DefaultOperationIT extends SpringITFramework {<a name="line.11"></a>
-<span class="sourceLineNo">012</span><a name="line.12"></a>
-<span class="sourceLineNo">013</span>    @Test<a name="line.13"></a>
-<span class="sourceLineNo">014</span>    public void testWithSimpleData() throws MalformedURLException, IOException {<a name="line.14"></a>
-<span class="sourceLineNo">015</span>        testSimpleFile(getTestFile(testFileSimple), SIMPLE_TYPES, getIntRange());<a name="line.15"></a>
-<span class="sourceLineNo">016</span>    }<a name="line.16"></a>
-<span class="sourceLineNo">017</span><a name="line.17"></a>
-<span class="sourceLineNo">018</span>    @Test<a name="line.18"></a>
-<span class="sourceLineNo">019</span>    public void testWithSlightlySimpleData() throws MalformedURLException, IOException {<a name="line.19"></a>
-<span class="sourceLineNo">020</span>        testSimpleFile(getTestFile(testFileSlightlyLessSimple), SLIGHTLY_SIMPLE_TYPES, getFloatRange());<a name="line.20"></a>
-<span class="sourceLineNo">021</span>    }<a name="line.21"></a>
-<span class="sourceLineNo">022</span><a name="line.22"></a>
-<span class="sourceLineNo">023</span>}<a name="line.23"></a>
+<span class="sourceLineNo">007</span>import java.io.IOException;<a name="line.7"></a>
+<span class="sourceLineNo">008</span>import java.net.MalformedURLException;<a name="line.8"></a>
+<span class="sourceLineNo">009</span>import java.util.Set;<a name="line.9"></a>
+<span class="sourceLineNo">010</span><a name="line.10"></a>
+<span class="sourceLineNo">011</span>import org.junit.Test;<a name="line.11"></a>
+<span class="sourceLineNo">012</span>import org.springframework.test.context.ContextConfiguration;<a name="line.12"></a>
+<span class="sourceLineNo">013</span><a name="line.13"></a>
+<span class="sourceLineNo">014</span>import com.asoroka.sidora.tabularmetadata.TabularMetadata;<a name="line.14"></a>
+<span class="sourceLineNo">015</span>import com.asoroka.sidora.tabularmetadata.datatype.DataType;<a name="line.15"></a>
+<span class="sourceLineNo">016</span><a name="line.16"></a>
+<span class="sourceLineNo">017</span>@ContextConfiguration("/spring-xml/default-operation.xml")<a name="line.17"></a>
+<span class="sourceLineNo">018</span>public class DefaultOperationIT extends SpringITFramework {<a name="line.18"></a>
+<span class="sourceLineNo">019</span><a name="line.19"></a>
+<span class="sourceLineNo">020</span>    @Test<a name="line.20"></a>
+<span class="sourceLineNo">021</span>    public void testWithSimpleData() throws MalformedURLException, IOException {<a name="line.21"></a>
+<span class="sourceLineNo">022</span>        final TabularMetadata results =<a name="line.22"></a>
+<span class="sourceLineNo">023</span>                testFile(getTestFile(testFileSimple), SIMPLE_TYPES, getIntRange(), DataType.Integer);<a name="line.23"></a>
+<span class="sourceLineNo">024</span>        final Set&lt;String&gt; enumeratedValuesForFirstField = results.enumeratedValues().get(0).get(DataType.String);<a name="line.24"></a>
+<span class="sourceLineNo">025</span>        assertEquals("Found wrong enumerated values in first field!", newHashSet("Kirk", "Chekov", "Scott", "Uhuru"),<a name="line.25"></a>
+<span class="sourceLineNo">026</span>                enumeratedValuesForFirstField);<a name="line.26"></a>
+<span class="sourceLineNo">027</span>    }<a name="line.27"></a>
+<span class="sourceLineNo">028</span><a name="line.28"></a>
+<span class="sourceLineNo">029</span>    @Test<a name="line.29"></a>
+<span class="sourceLineNo">030</span>    public void testWithSlightlySimpleData() throws MalformedURLException, IOException {<a name="line.30"></a>
+<span class="sourceLineNo">031</span>        testFile(getTestFile(testFileSlightlyLessSimple), SLIGHTLY_SIMPLE_TYPES, getFloatRange(), DataType.Decimal);<a name="line.31"></a>
+<span class="sourceLineNo">032</span>    }<a name="line.32"></a>
+<span class="sourceLineNo">033</span><a name="line.33"></a>
+<span class="sourceLineNo">034</span>}<a name="line.34"></a>
 
 
 

@@ -17,24 +17,26 @@
 <a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> org.junit.Test;
 <a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> org.springframework.test.context.ContextConfiguration;
 <a class="jxr_linenumber" name="9" href="#9">9</a>   
-<a class="jxr_linenumber" name="10" href="#10">10</a>  @ContextConfiguration(<span class="jxr_string">"/spring-xml/scan-limit-operation.xml"</span>)
-<a class="jxr_linenumber" name="11" href="#11">11</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/asoroka/sidora/tabularmetadata/spring/OperationWithScanLimitIT.html">OperationWithScanLimitIT</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/asoroka/sidora/tabularmetadata/spring/SpringITFramework.html">SpringITFramework</a> {
-<a class="jxr_linenumber" name="12" href="#12">12</a>  
-<a class="jxr_linenumber" name="13" href="#13">13</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String testFileWithMarkerRow = <span class="jxr_string">"simplewithmarkerrow.csv"</span>;
+<a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.datatype.DataType;
+<a class="jxr_linenumber" name="11" href="#11">11</a>  
+<a class="jxr_linenumber" name="12" href="#12">12</a>  @ContextConfiguration(<span class="jxr_string">"/spring-xml/scan-limit-operation.xml"</span>)
+<a class="jxr_linenumber" name="13" href="#13">13</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../com/asoroka/sidora/tabularmetadata/spring/OperationWithScanLimitIT.html">OperationWithScanLimitIT</a> <strong class="jxr_keyword">extends</strong> <a href="../../../../../com/asoroka/sidora/tabularmetadata/spring/SpringITFramework.html">SpringITFramework</a> {
 <a class="jxr_linenumber" name="14" href="#14">14</a>  
-<a class="jxr_linenumber" name="15" href="#15">15</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="16" href="#16">16</a>  <em class="jxr_javadoccomment">     * Scan a file with a very high maximum value in the last column and check that we didn't get a minMax range</em>
-<a class="jxr_linenumber" name="17" href="#17">17</a>  <em class="jxr_javadoccomment">     * including that value.</em>
-<a class="jxr_linenumber" name="18" href="#18">18</a>  <em class="jxr_javadoccomment">     * </em>
-<a class="jxr_linenumber" name="19" href="#19">19</a>  <em class="jxr_javadoccomment">     * @throws MalformedURLException</em>
-<a class="jxr_linenumber" name="20" href="#20">20</a>  <em class="jxr_javadoccomment">     * @throws IOException</em>
-<a class="jxr_linenumber" name="21" href="#21">21</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="22" href="#22">22</a>      @Test
-<a class="jxr_linenumber" name="23" href="#23">23</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testWithScanLimit() <strong class="jxr_keyword">throws</strong> MalformedURLException, IOException {
-<a class="jxr_linenumber" name="24" href="#24">24</a>          testSimpleFile(getTestFile(testFileWithMarkerRow), SLIGHTLY_SIMPLE_TYPES, getFloatRange());
-<a class="jxr_linenumber" name="25" href="#25">25</a>      }
-<a class="jxr_linenumber" name="26" href="#26">26</a>  
-<a class="jxr_linenumber" name="27" href="#27">27</a>  }
+<a class="jxr_linenumber" name="15" href="#15">15</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> String testFileWithMarkerRow = <span class="jxr_string">"simplewithmarkerrow.csv"</span>;
+<a class="jxr_linenumber" name="16" href="#16">16</a>  
+<a class="jxr_linenumber" name="17" href="#17">17</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="18" href="#18">18</a>  <em class="jxr_javadoccomment">     * Scan a file with a very high maximum value in the last column and check that we didn't get a minMax range</em>
+<a class="jxr_linenumber" name="19" href="#19">19</a>  <em class="jxr_javadoccomment">     * including that value.</em>
+<a class="jxr_linenumber" name="20" href="#20">20</a>  <em class="jxr_javadoccomment">     * </em>
+<a class="jxr_linenumber" name="21" href="#21">21</a>  <em class="jxr_javadoccomment">     * @throws MalformedURLException</em>
+<a class="jxr_linenumber" name="22" href="#22">22</a>  <em class="jxr_javadoccomment">     * @throws IOException</em>
+<a class="jxr_linenumber" name="23" href="#23">23</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="24" href="#24">24</a>      @Test
+<a class="jxr_linenumber" name="25" href="#25">25</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testWithScanLimit() <strong class="jxr_keyword">throws</strong> MalformedURLException, IOException {
+<a class="jxr_linenumber" name="26" href="#26">26</a>          testFile(getTestFile(testFileWithMarkerRow), SLIGHTLY_SIMPLE_TYPES, getFloatRange(), DataType.Decimal);
+<a class="jxr_linenumber" name="27" href="#27">27</a>      }
+<a class="jxr_linenumber" name="28" href="#28">28</a>  
+<a class="jxr_linenumber" name="29" href="#29">29</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>
