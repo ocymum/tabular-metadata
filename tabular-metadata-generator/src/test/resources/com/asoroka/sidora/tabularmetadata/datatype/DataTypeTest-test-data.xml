@@ -1,0 +1,153 @@
+<map>
+    <entry>
+        <string>expectedParseableTypes</string>
+        <enum-map enum-type="DataType">
+            <entry>
+                <DataType>PositiveInteger</DataType>
+                <enum-set enum-type="DataType"
+                    >String,Decimal,Integer,NonNegativeInteger,PositiveInteger,DateTime</enum-set>
+            </entry>
+            <entry>
+                <DataType>NonNegativeInteger</DataType>
+                <enum-set enum-type="DataType"
+                    >String,Decimal,Integer,NonNegativeInteger,DateTime</enum-set>
+            </entry>
+            <entry>
+                <DataType>Integer</DataType>
+                <enum-set enum-type="DataType">String,Decimal,Integer,DateTime</enum-set>
+            </entry>
+            <entry>
+                <DataType>Decimal</DataType>
+                <enum-set enum-type="DataType">String,Decimal</enum-set>
+            </entry>
+            <entry>
+                <DataType>Geographic</DataType>
+                <enum-set enum-type="DataType">String,Geographic</enum-set>
+            </entry>
+            <entry>
+                <DataType>Boolean</DataType>
+                <enum-set enum-type="DataType">String,Boolean</enum-set>
+            </entry>
+            <entry>
+                <DataType>DateTime</DataType>
+                <enum-set enum-type="DataType">String,DateTime</enum-set>
+            </entry>
+            <entry>
+                <DataType>String</DataType>
+                <enum-set enum-type="DataType">String</enum-set>
+            </entry>
+            <entry>
+                <DataType>URI</DataType>
+                <enum-set enum-type="DataType">URI,String</enum-set>
+            </entry>
+        </enum-map>
+    </entry>
+    <entry>
+        <string>expectedSuperTypes</string>
+        <enum-map enum-type="DataType">
+            <entry>
+                <DataType>PositiveInteger</DataType>
+                <enum-set enum-type="DataType"
+                    >String,Decimal,Integer,NonNegativeInteger,PositiveInteger</enum-set>
+            </entry>
+            <entry>
+                <DataType>NonNegativeInteger</DataType>
+                <enum-set enum-type="DataType">String,Decimal,Integer,NonNegativeInteger</enum-set>
+            </entry>
+            <entry>
+                <DataType>Integer</DataType>
+                <enum-set enum-type="DataType">String,Decimal,Integer</enum-set>
+            </entry>
+            <entry>
+                <DataType>Decimal</DataType>
+                <enum-set enum-type="DataType">String,Decimal</enum-set>
+            </entry>
+            <entry>
+                <DataType>Geographic</DataType>
+                <enum-set enum-type="DataType">String,Geographic</enum-set>
+            </entry>
+            <entry>
+                <DataType>Boolean</DataType>
+                <enum-set enum-type="DataType">String,Boolean</enum-set>
+            </entry>
+            <entry>
+                <DataType>DateTime</DataType>
+                <enum-set enum-type="DataType">String,DateTime</enum-set>
+            </entry>
+            <entry>
+                <DataType>String</DataType>
+                <enum-set enum-type="DataType">String</enum-set>
+            </entry>
+            <entry>
+                <DataType>URI</DataType>
+                <enum-set enum-type="DataType">URI,String</enum-set>
+            </entry>
+        </enum-map>
+    </entry>
+    <entry>
+        <string>sampleValues</string>
+        <enum-map enum-type="DataType">
+            <entry>
+                <DataType>String</DataType>
+                <linked-list>
+                    <string>:::oobleck</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>URI</DataType>
+                <linked-list>
+                    <string>http://example.com</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>DateTime</DataType>
+                <linked-list>
+                    <string>1990-3-4</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>Boolean</DataType>
+                <linked-list>
+                    <string>truE</string>
+                    <string>falsE</string>
+                    <string>t</string>
+                    <string>F</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>Geographic</DataType>
+                <linked-list>
+                    <string>38.03,-78.478889</string>
+                    <string>38.03,-78.478889, 0</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>Integer</DataType>
+                <linked-list>
+                    <string>-1</string>
+                    <string>-999</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>NonNegativeInteger</DataType>
+                <linked-list>
+                    <string>0</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>PositiveInteger</DataType>
+                <linked-list>
+                    <string>123</string>
+                    <string>9000</string>
+                </linked-list>
+            </entry>
+            <entry>
+                <DataType>Decimal</DataType>
+                <linked-list>
+                    <string>-5344543.4563453</string>
+                    <string>6734.999</string>
+                </linked-list>
+            </entry>
+        </enum-map>
+    </entry>
+</map>

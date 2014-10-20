@@ -13,6 +13,7 @@ import org.junit.Test;
 import org.mockito.internal.stubbing.answers.Returns;
 import org.slf4j.Logger;
 
+import com.asoroka.sidora.tabularmetadata.datatype.DataType;
 import com.asoroka.sidora.tabularmetadata.heuristics.enumerations.EnumeratedValuesHeuristic;
 import com.asoroka.sidora.tabularmetadata.heuristics.ranges.RangeDeterminingHeuristic;
 import com.asoroka.sidora.tabularmetadata.heuristics.types.TypeDeterminingHeuristic;
@@ -30,6 +31,11 @@ public class TestUtilities {
      * For deserializing test data.
      */
     private static final XStream X_STREAM = new XStream(new StaxDriver());
+
+    static {
+        // DataType is so common a type in our test code that we give it a convenient alias.
+        X_STREAM.alias("DataType", DataType.class);
+    }
 
     private static final Logger log = getLogger(TestUtilities.class);
 
