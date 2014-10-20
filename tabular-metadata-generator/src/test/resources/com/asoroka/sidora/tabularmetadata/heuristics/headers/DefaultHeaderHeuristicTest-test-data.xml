@@ -1,0 +1,18 @@
+<map>
+    <entry>
+        <string>goodData</string>
+        <linked-list>
+            <string>NAME</string>
+            <string>RANK</string>
+            <string>SERIAL NUMBER</string>
+        </linked-list>
+    </entry>
+    <entry>
+        <string>badData</string>
+        <linked-list>
+            <string>Kirk</string>
+            <string>Captain</string>
+            <string>00034</string>
+        </linked-list>
+    </entry>
+</map>
