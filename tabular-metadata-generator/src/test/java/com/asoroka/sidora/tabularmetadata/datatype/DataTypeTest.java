@@ -33,23 +33,24 @@ public class DataTypeTest {
 
     // private static final Logger log = getLogger(DataTypeTest.class);
 
-    private static Map<DataType, Set<DataType>> expectedParseableTypes = retrieveTestData(
-            DataTypeTest.class, "expectedParseableTypes");
+    private static Map<DataType, Set<DataType>> expectedParseableTypes = retrieveTestData(DataTypeTest.class,
+            "expectedParseableTypes");
 
-    private static Map<DataType, Set<DataType>> expectedSuperTypes = retrieveTestData(
-            DataTypeTest.class, "expectedSuperTypes");
+    private static Map<DataType, Set<DataType>> expectedSuperTypes = retrieveTestData(DataTypeTest.class,
+            "expectedSuperTypes");
 
-    private static Map<DataType, List<String>> sampleValues = retrieveTestData(
-            DataTypeTest.class, "sampleValues");
+    private static Map<DataType, List<String>> sampleParseableValues = retrieveTestData(DataTypeTest.class,
+            "sampleParseableValues");
 
     @Test
-    public void testCorrectParsingOfValues() {
+    public void testMinimalParsingOfParseableValues() {
         for (final DataType testType : DataType.values()) {
-            for (final String testValue : sampleValues.get(testType)) {
+            for (final String testValue : sampleParseableValues.get(testType)) {
                 final Set<DataType> result = parseableAs(testValue);
-                assertEquals("Did not find the appropriate datatypes suggested as parseable for a " + testType + "!",
-                        expectedParseableTypes
-                                .get(testType), result);
+                assertTrue("Did not find the appropriate datatypes suggested as parseable for a " + testType +
+                        "! Found " + result + " when we expected at least " + expectedParseableTypes.get(testType) +
+                        "!",
+                        result.containsAll(expectedParseableTypes.get(testType)));
             }
         }
     }
@@ -92,7 +93,7 @@ public class DataTypeTest {
     }
 
     @Test
-    public void testBadGeographies() {
+    public void testOnly2DAnd3DGeographiesCanBeParsed() {
         String testValue = "23, 23, 23, 23";
         assertFalse("Accepted a four-valued tuple as geographic coordinates!", parseableAs(testValue)
                 .contains(Geographic));
@@ -102,42 +103,38 @@ public class DataTypeTest {
     }
 
     @Test
-    public void testNoDecimalPointDecimal() {
+    public void testNoDecimalPointDecimalCanBeParsed() {
         final String testValue = "7087";
         assertTrue("Failed to accept a no-decimal-point number as a legitimate Decimal!", parseableAs(testValue)
                 .contains(Decimal));
     }
 
     @Test
-    public void testBadIntegerPartDecimal() {
+    public void testNonIntegerPartDecimal() {
         final String testValue = "fhglf.7087";
         assertFalse("Accepted a \"number\" with non-integral integer part as a legitimate Decimal!", parseableAs(
-                testValue)
-                .contains(Decimal));
+                testValue).contains(Decimal));
     }
 
     @Test
-    public void testBadDecimalPartDecimal() {
+    public void testNonDecimalPartDecimal() {
         final String testValue = "34235.dfgsdfg";
         assertFalse("Accepted a \"number\" with non-integral decimal part as a legitimate Decimal!", parseableAs(
-                testValue)
-                .contains(Decimal));
+                testValue).contains(Decimal));
     }
 
     @Test
-    public void testBadBothPartsDecimal() {
+    public void testBothPartsNonParseableDecimal() {
         final String testValue = "sgsg.dfgsdfg";
         assertFalse("Accepted a \"number\" with non-integral decimal part as a legitimate Decimal!", parseableAs(
-                testValue)
-                .contains(Decimal));
+                testValue).contains(Decimal));
     }
 
     @Test
     public void testCompletelyBadDecimal() {
         final String testValue = "s24fgsdfg";
-        assertFalse("Accepted a \"number\" with non-integral decimal part as a legitimate Decimal!", parseableAs(
-                testValue)
-                .contains(Decimal));
+        assertFalse("Accepted a \"number\" " + testValue + " as a legitimate Decimal!", parseableAs(
+                testValue).contains(Decimal));
     }
 
     @Test
@@ -146,5 +143,4 @@ public class DataTypeTest {
         assertFalse("Accepted a string that cannot be parsed as an URI as a legitimate URI!", parseableAs(testValue)
                 .contains(URI));
     }
-
 }

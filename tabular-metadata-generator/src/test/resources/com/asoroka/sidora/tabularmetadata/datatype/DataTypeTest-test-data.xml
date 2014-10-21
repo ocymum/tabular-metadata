@@ -85,7 +85,7 @@
         </enum-map>
     </entry>
     <entry>
-        <string>sampleValues</string>
+        <string>sampleParseableValues</string>
         <enum-map enum-type="DataType">
             <entry>
                 <DataType>String</DataType>
@@ -97,12 +97,14 @@
                 <DataType>URI</DataType>
                 <linked-list>
                     <string>http://example.com</string>
+                    <string>info:url</string>
                 </linked-list>
             </entry>
             <entry>
                 <DataType>DateTime</DataType>
                 <linked-list>
                     <string>1990-3-4</string>
+                    <string>123</string>
                 </linked-list>
             </entry>
             <entry>
@@ -126,12 +128,15 @@
                 <linked-list>
                     <string>-1</string>
                     <string>-999</string>
+                    <string>0</string>
+                    <string>123</string>
                 </linked-list>
             </entry>
             <entry>
                 <DataType>NonNegativeInteger</DataType>
                 <linked-list>
                     <string>0</string>
+                    <string>123</string>
                 </linked-list>
             </entry>
             <entry>
@@ -146,6 +151,7 @@
                 <linked-list>
                     <string>-5344543.4563453</string>
                     <string>6734.999</string>
+                    <string>45</string>
                 </linked-list>
             </entry>
         </enum-map>
