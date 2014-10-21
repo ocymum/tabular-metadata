@@ -49,8 +49,7 @@ public abstract class EnumeratedValuesHeuristicTestFrame<TestHeuristic extends E
             simpleTestData.put(type, ImmutableMap.<Set<String>, List<String>> builder()
                     .put(new HashSet<>(dataList), dataList).build());
         }
-    }
-    static {
+
         realisticTestData =
                 ImmutableMap.<DataType, Map<Set<String>, List<String>>> builder()
                         .put(DataType.String,

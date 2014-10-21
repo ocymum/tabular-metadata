@@ -69,15 +69,15 @@ public class TestUtilities {
     }
 
     /**
-     * Retrieves some test data from the classpath. The data file is assumed to be an XStream-serialized map, with
-     * different entries for different pieces of test data needed for testing a single class. The name of the test
-     * data file is assumed to be the name of the class under test, with "test-data.xml" appended.
+     * Retrieves some unit test data from the classpath. The data file is assumed to be an XStream-serialized map,
+     * with different entries for different pieces of test data needed for testing a single class. The name of the
+     * test data file is assumed to be the name of the class under test, with "test-data.xml" appended.
      * 
      * @param testClass the class relative to which to retrieve the test data, normally the class under test
      * @param key the key from which to retrieve the test data
      * @return
      */
-    public static <T> T retrieveTestData(final Class<?> testClass, final Object key) {
+    public static <T> T retrieveUnitTestData(final Class<?> testClass, final Object key) {
         final String testDataFileName = testClass.getSimpleName() + "-test-data.xml";
         log.trace("Attempting to load test data from: {}", testDataFileName);
         final URL testDataFile = testClass.getResource(testDataFileName);
@@ -87,8 +87,8 @@ public class TestUtilities {
     }
 
     @Test
-    public void testTestDataRetrieval() {
-        final String testData = retrieveTestData(this.getClass(), "test");
+    public void testUnitTestDataRetrieval() {
+        final String testData = retrieveUnitTestData(this.getClass(), "test");
         assertEquals("successful", testData);
     }
 }

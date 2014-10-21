@@ -16,7 +16,7 @@ import static com.asoroka.sidora.tabularmetadata.datatype.DataType.String;
 import static com.asoroka.sidora.tabularmetadata.datatype.DataType.URI;
 import static com.asoroka.sidora.tabularmetadata.datatype.DataType.parseableAs;
 import static com.asoroka.sidora.tabularmetadata.datatype.DataType.sortByHierarchy;
-import static com.asoroka.sidora.tabularmetadata.test.TestUtilities.retrieveTestData;
+import static com.asoroka.sidora.tabularmetadata.test.TestUtilities.retrieveUnitTestData;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -33,13 +33,13 @@ public class DataTypeTest {
 
     // private static final Logger log = getLogger(DataTypeTest.class);
 
-    private static Map<DataType, Set<DataType>> expectedParseableTypes = retrieveTestData(DataTypeTest.class,
+    private static Map<DataType, Set<DataType>> expectedParseableTypes = retrieveUnitTestData(DataTypeTest.class,
             "expectedParseableTypes");
 
-    private static Map<DataType, Set<DataType>> expectedSuperTypes = retrieveTestData(DataTypeTest.class,
+    private static Map<DataType, Set<DataType>> expectedSuperTypes = retrieveUnitTestData(DataTypeTest.class,
             "expectedSuperTypes");
 
-    private static Map<DataType, List<String>> sampleParseableValues = retrieveTestData(DataTypeTest.class,
+    private static Map<DataType, List<String>> sampleParseableValues = retrieveUnitTestData(DataTypeTest.class,
             "sampleParseableValues");
 
     @Test

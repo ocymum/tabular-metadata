@@ -1,7 +1,7 @@
 
 package com.asoroka.sidora.tabularmetadata.heuristics.headers;
 
-import static com.asoroka.sidora.tabularmetadata.test.TestUtilities.retrieveTestData;
+import static com.asoroka.sidora.tabularmetadata.test.TestUtilities.retrieveUnitTestData;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -11,9 +11,9 @@ import org.junit.Test;
 
 public class DefaultHeaderHeuristicTest extends HeaderHeuristicTestFrame<DefaultHeaderHeuristic> {
 
-    private static final List<String> goodData = retrieveTestData(DefaultHeaderHeuristicTest.class, "goodData");
+    private static final List<String> goodData = retrieveUnitTestData(DefaultHeaderHeuristicTest.class, "goodData");
 
-    private static final List<String> badData = retrieveTestData(DefaultHeaderHeuristicTest.class, "badData");
+    private static final List<String> badData = retrieveUnitTestData(DefaultHeaderHeuristicTest.class, "badData");
 
     @Override
     protected DefaultHeaderHeuristic newTestHeuristic() {
