@@ -1,0 +1,6 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.tabularmetadata.spring.defaults,DefaultEnumeratedValuesStrategy,0,3,0,0,0,1,0,1,0,1
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.tabularmetadata.spring.defaults,DefaultRangeStrategy,0,3,0,0,0,1,0,1,0,1
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.tabularmetadata.spring.defaults,DefaultDatatypeStrategy,0,3,0,0,0,1,0,1,0,1
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.tabularmetadata.spring.defaults,DefaultHeaderHeuristic,0,3,0,0,0,1,0,1,0,1
+Spring Facilities for Tabular Metadata Generation,com.asoroka.sidora.tabularmetadata.spring.defaults,DefaultCsvFormat,0,3,0,0,0,1,0,1,0,1
