@@ -40,23 +40,24 @@
 <a class="jxr_linenumber" name="30" href="#30">30</a>                  testFile(getTestFile(testFileSimple), STRING_TYPES, getStringRange(), DataType.String);
 <a class="jxr_linenumber" name="31" href="#31">31</a>          <strong class="jxr_keyword">final</strong> List&lt;String&gt; headerNames = result.headerNames();
 <a class="jxr_linenumber" name="32" href="#32">32</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numHeaders = headerNames.size();
-<a class="jxr_linenumber" name="33" href="#33">33</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 0; i &lt; numHeaders; i++) {
-<a class="jxr_linenumber" name="34" href="#34">34</a>              assertEquals(<span class="jxr_string">"Found wrong name for header!"</span>, <span class="jxr_string">"Variable "</span> + i, headerNames.get(i));
-<a class="jxr_linenumber" name="35" href="#35">35</a>  
-<a class="jxr_linenumber" name="36" href="#36">36</a>          }
-<a class="jxr_linenumber" name="37" href="#37">37</a>          log.trace(<span class="jxr_string">"End testWithSimpleData()."</span>);
-<a class="jxr_linenumber" name="38" href="#38">38</a>      }
-<a class="jxr_linenumber" name="39" href="#39">39</a>  
-<a class="jxr_linenumber" name="40" href="#40">40</a>      @Test
-<a class="jxr_linenumber" name="41" href="#41">41</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testWithDataWithHeadersMatching() <strong class="jxr_keyword">throws</strong> MalformedURLException, IOException {
-<a class="jxr_linenumber" name="42" href="#42">42</a>          log.trace(<span class="jxr_string">"testWithDataWithHeadersMatching()..."</span>);
-<a class="jxr_linenumber" name="43" href="#43">43</a>          <strong class="jxr_keyword">final</strong> TabularMetadata result =
-<a class="jxr_linenumber" name="44" href="#44">44</a>                  testFile(getTestFile(testFileSimpleWithCrazyHeaders), SIMPLE_TYPES, getIntRange(), DataType.Integer);
-<a class="jxr_linenumber" name="45" href="#45">45</a>          assertEquals(<span class="jxr_string">"Didn't find header names when we should have!"</span>, asList(<span class="jxr_string">"MATCH1"</span>, <span class="jxr_string">"MATCH2"</span>, <span class="jxr_string">"MATCH3"</span>), result
-<a class="jxr_linenumber" name="46" href="#46">46</a>                  .headerNames());
-<a class="jxr_linenumber" name="47" href="#47">47</a>          log.trace(<span class="jxr_string">"End testWithDataWithHeadersMatching()."</span>);
-<a class="jxr_linenumber" name="48" href="#48">48</a>      }
-<a class="jxr_linenumber" name="49" href="#49">49</a>  }
+<a class="jxr_linenumber" name="33" href="#33">33</a>          <strong class="jxr_keyword">for</strong> (<strong class="jxr_keyword">int</strong> i = 1; i &lt; numHeaders; i++) {
+<a class="jxr_linenumber" name="34" href="#34">34</a>              log.trace(<span class="jxr_string">"Examining header #{}"</span>, i);
+<a class="jxr_linenumber" name="35" href="#35">35</a>              assertEquals(<span class="jxr_string">"Found wrong name for header!"</span>, <span class="jxr_string">"Variable "</span> + i, headerNames.get(i - 1));
+<a class="jxr_linenumber" name="36" href="#36">36</a>  
+<a class="jxr_linenumber" name="37" href="#37">37</a>          }
+<a class="jxr_linenumber" name="38" href="#38">38</a>          log.trace(<span class="jxr_string">"End testWithSimpleData()."</span>);
+<a class="jxr_linenumber" name="39" href="#39">39</a>      }
+<a class="jxr_linenumber" name="40" href="#40">40</a>  
+<a class="jxr_linenumber" name="41" href="#41">41</a>      @Test
+<a class="jxr_linenumber" name="42" href="#42">42</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testWithDataWithHeadersMatching() <strong class="jxr_keyword">throws</strong> MalformedURLException, IOException {
+<a class="jxr_linenumber" name="43" href="#43">43</a>          log.trace(<span class="jxr_string">"testWithDataWithHeadersMatching()..."</span>);
+<a class="jxr_linenumber" name="44" href="#44">44</a>          <strong class="jxr_keyword">final</strong> TabularMetadata result =
+<a class="jxr_linenumber" name="45" href="#45">45</a>                  testFile(getTestFile(testFileSimpleWithCrazyHeaders), SIMPLE_TYPES, getIntRange(), DataType.Integer);
+<a class="jxr_linenumber" name="46" href="#46">46</a>          assertEquals(<span class="jxr_string">"Didn't find header names when we should have!"</span>, asList(<span class="jxr_string">"MATCH1"</span>, <span class="jxr_string">"MATCH2"</span>, <span class="jxr_string">"MATCH3"</span>), result
+<a class="jxr_linenumber" name="47" href="#47">47</a>                  .headerNames());
+<a class="jxr_linenumber" name="48" href="#48">48</a>          log.trace(<span class="jxr_string">"End testWithDataWithHeadersMatching()."</span>);
+<a class="jxr_linenumber" name="49" href="#49">49</a>      }
+<a class="jxr_linenumber" name="50" href="#50">50</a>  }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

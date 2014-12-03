@@ -14,9 +14,9 @@
 <a class="jxr_linenumber" name="4" href="#4">4</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.google.common.collect.Iterators.advance;
 <a class="jxr_linenumber" name="5" href="#5">5</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.google.common.collect.Iterators.cycle;
 <a class="jxr_linenumber" name="6" href="#6">6</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.google.common.collect.Iterators.peekingIterator;
-<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.google.common.collect.Lists.newArrayListWithCapacity;
-<a class="jxr_linenumber" name="8" href="#8">8</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.slf4j.LoggerFactory.getLogger;
-<a class="jxr_linenumber" name="9" href="#9">9</a>   
+<a class="jxr_linenumber" name="7" href="#7">7</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.slf4j.LoggerFactory.getLogger;
+<a class="jxr_linenumber" name="8" href="#8">8</a>   
+<a class="jxr_linenumber" name="9" href="#9">9</a>   <strong class="jxr_keyword">import</strong> java.util.ArrayList;
 <a class="jxr_linenumber" name="10" href="#10">10</a>  <strong class="jxr_keyword">import</strong> java.util.Iterator;
 <a class="jxr_linenumber" name="11" href="#11">11</a>  <strong class="jxr_keyword">import</strong> java.util.List;
 <a class="jxr_linenumber" name="12" href="#12">12</a>  
@@ -54,33 +54,33 @@
 <a class="jxr_linenumber" name="44" href="#44">44</a>  
 <a class="jxr_linenumber" name="45" href="#45">45</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = getLogger(TabularScanner.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="46" href="#46">46</a>  
-<a class="jxr_linenumber" name="47" href="#47">47</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/asoroka/sidora/tabularmetadata/TabularScanner.html">TabularScanner</a>(<strong class="jxr_keyword">final</strong> CSVParser parser, <strong class="jxr_keyword">final</strong> TypeDeterminingHeuristic&lt;?&gt; typeStrategy,
+<a class="jxr_linenumber" name="47" href="#47">47</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../com/asoroka/sidora/tabularmetadata/TabularScanner.html">TabularScanner</a>(<strong class="jxr_keyword">final</strong> Iterator&lt;CSVRecord&gt; parser, <strong class="jxr_keyword">final</strong> TypeDeterminingHeuristic&lt;?&gt; typeStrategy,
 <a class="jxr_linenumber" name="48" href="#48">48</a>              <strong class="jxr_keyword">final</strong> RangeDeterminingHeuristic&lt;?&gt; rangeStrategy, <strong class="jxr_keyword">final</strong> EnumeratedValuesHeuristic&lt;?&gt; enumStrategy) {
-<a class="jxr_linenumber" name="49" href="#49">49</a>          <strong class="jxr_keyword">this</strong>.internalScanner = peekingIterator(parser.iterator());
+<a class="jxr_linenumber" name="49" href="#49">49</a>          <strong class="jxr_keyword">this</strong>.internalScanner = peekingIterator(parser);
 <a class="jxr_linenumber" name="50" href="#50">50</a>          <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">int</strong> numColumns = internalScanner.peek().size();
 <a class="jxr_linenumber" name="51" href="#51">51</a>  
 <a class="jxr_linenumber" name="52" href="#52">52</a>          log.debug(<span class="jxr_string">"Found {} columns in our data."</span>, numColumns);
 <a class="jxr_linenumber" name="53" href="#53">53</a>          <em class="jxr_comment">// create a "row" of type strategy instances of the same length as the rows in our data</em>
-<a class="jxr_linenumber" name="54" href="#54">54</a>          <strong class="jxr_keyword">this</strong>.rowOfTypeStrategies = newArrayListWithCapacity(numColumns);
+<a class="jxr_linenumber" name="54" href="#54">54</a>          <strong class="jxr_keyword">this</strong>.rowOfTypeStrategies = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(numColumns);
 <a class="jxr_linenumber" name="55" href="#55">55</a>          <strong class="jxr_keyword">int</strong> i;
 <a class="jxr_linenumber" name="56" href="#56">56</a>          <strong class="jxr_keyword">for</strong> (i = 0; i &lt; numColumns; i++) {
-<a class="jxr_linenumber" name="57" href="#57">57</a>              rowOfTypeStrategies.add(typeStrategy.clone());
+<a class="jxr_linenumber" name="57" href="#57">57</a>              rowOfTypeStrategies.add(typeStrategy.newInstance());
 <a class="jxr_linenumber" name="58" href="#58">58</a>          }
 <a class="jxr_linenumber" name="59" href="#59">59</a>          <em class="jxr_comment">// this.typeStrategies will cycle endlessly around our row</em>
 <a class="jxr_linenumber" name="60" href="#60">60</a>          <strong class="jxr_keyword">this</strong>.typeStrategies = cycle(rowOfTypeStrategies);
 <a class="jxr_linenumber" name="61" href="#61">61</a>  
 <a class="jxr_linenumber" name="62" href="#62">62</a>          <em class="jxr_comment">// create a "row" of range strategy instances of the same length as the rows in our data</em>
-<a class="jxr_linenumber" name="63" href="#63">63</a>          <strong class="jxr_keyword">this</strong>.rowOfRangeStrategies = newArrayListWithCapacity(numColumns);
+<a class="jxr_linenumber" name="63" href="#63">63</a>          <strong class="jxr_keyword">this</strong>.rowOfRangeStrategies = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(numColumns);
 <a class="jxr_linenumber" name="64" href="#64">64</a>          <strong class="jxr_keyword">for</strong> (i = 0; i &lt; numColumns; i++) {
-<a class="jxr_linenumber" name="65" href="#65">65</a>              rowOfRangeStrategies.add(rangeStrategy.clone());
+<a class="jxr_linenumber" name="65" href="#65">65</a>              rowOfRangeStrategies.add(rangeStrategy.newInstance());
 <a class="jxr_linenumber" name="66" href="#66">66</a>          }
 <a class="jxr_linenumber" name="67" href="#67">67</a>          <em class="jxr_comment">// this.rangeStrategies will cycle endlessly around our row</em>
 <a class="jxr_linenumber" name="68" href="#68">68</a>          <strong class="jxr_keyword">this</strong>.rangeStrategies = cycle(rowOfRangeStrategies);
 <a class="jxr_linenumber" name="69" href="#69">69</a>  
 <a class="jxr_linenumber" name="70" href="#70">70</a>          <em class="jxr_comment">// create a "row" of enum strategy instances of the same length as the rows in our data</em>
-<a class="jxr_linenumber" name="71" href="#71">71</a>          <strong class="jxr_keyword">this</strong>.rowOfEnumStrategies = newArrayListWithCapacity(numColumns);
+<a class="jxr_linenumber" name="71" href="#71">71</a>          <strong class="jxr_keyword">this</strong>.rowOfEnumStrategies = <strong class="jxr_keyword">new</strong> ArrayList&lt;&gt;(numColumns);
 <a class="jxr_linenumber" name="72" href="#72">72</a>          <strong class="jxr_keyword">for</strong> (i = 0; i &lt; numColumns; i++) {
-<a class="jxr_linenumber" name="73" href="#73">73</a>              rowOfEnumStrategies.add(enumStrategy.clone());
+<a class="jxr_linenumber" name="73" href="#73">73</a>              rowOfEnumStrategies.add(enumStrategy.newInstance());
 <a class="jxr_linenumber" name="74" href="#74">74</a>          }
 <a class="jxr_linenumber" name="75" href="#75">75</a>          <em class="jxr_comment">// this.enumStrategies will cycle endlessly around our row</em>
 <a class="jxr_linenumber" name="76" href="#76">76</a>          <strong class="jxr_keyword">this</strong>.enumStrategies = cycle(rowOfEnumStrategies);
@@ -97,7 +97,7 @@
 <a class="jxr_linenumber" name="87" href="#87">87</a>                  <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> typeStrategiesShouldContinue = typeStrategies.next().addValue(lex);
 <a class="jxr_linenumber" name="88" href="#88">88</a>                  <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> enumStrategiesShouldContinue = enumStrategies.next().addValue(lex);
 <a class="jxr_linenumber" name="89" href="#89">89</a>                  log.trace(
-<a class="jxr_linenumber" name="90" href="#90">90</a>                          <span class="jxr_string">"Continue flag received fron range strategy: {}, from type strategy: {}, from enum strategy: {}."</span>,
+<a class="jxr_linenumber" name="90" href="#90">90</a>                          <span class="jxr_string">"Continue flag received from range strategy: {}, from type strategy: {}, from enum strategy: {}."</span>,
 <a class="jxr_linenumber" name="91" href="#91">91</a>                          rangeStrategiesShouldContinue, typeStrategiesShouldContinue, enumStrategiesShouldContinue);
 <a class="jxr_linenumber" name="92" href="#92">92</a>                  <em class="jxr_comment">// if any heuristic is not done, we aren't done</em>
 <a class="jxr_linenumber" name="93" href="#93">93</a>                  <strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">boolean</strong> shouldContinue =
@@ -113,9 +113,9 @@
 <a class="jxr_linenumber" name="103" href="#103">103</a>     }
 <a class="jxr_linenumber" name="104" href="#104">104</a> 
 <a class="jxr_linenumber" name="105" href="#105">105</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="106" href="#106">106</a> <em class="jxr_javadoccomment">     * Scan rows in our CSV up to a limit, exhausting values from the internal parser as we do. &lt;br/&gt;</em>
-<a class="jxr_linenumber" name="107" href="#107">107</a> <em class="jxr_javadoccomment">     * WARNING: Be careful about calling this more than once on a {@link TabularScanner}. The internal parser of a</em>
-<a class="jxr_linenumber" name="108" href="#108">108</a> <em class="jxr_javadoccomment">     * scanner cannot be reset.</em>
+<a class="jxr_linenumber" name="106" href="#106">106</a> <em class="jxr_javadoccomment">     * Scan rows in our data up to a limit, exhausting values from the internal parser as we do. &lt;br/&gt;</em>
+<a class="jxr_linenumber" name="107" href="#107">107</a> <em class="jxr_javadoccomment">     * WARNING: Do not call this more than once on a {@link TabularScanner}. The internal parser of a scanner cannot</em>
+<a class="jxr_linenumber" name="108" href="#108">108</a> <em class="jxr_javadoccomment">     * be reset.</em>
 <a class="jxr_linenumber" name="109" href="#109">109</a> <em class="jxr_javadoccomment">     * </em>
 <a class="jxr_linenumber" name="110" href="#110">110</a> <em class="jxr_javadoccomment">     * @param limit The number of rows to scan, 0 for all rows.</em>
 <a class="jxr_linenumber" name="111" href="#111">111</a> <em class="jxr_javadoccomment">     */</em>
@@ -135,29 +135,27 @@
 <a class="jxr_linenumber" name="125" href="#125">125</a> <em class="jxr_javadoccomment">     * @return the row of strategies used to determine the types of fields</em>
 <a class="jxr_linenumber" name="126" href="#126">126</a> <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="127" href="#127">127</a>     <strong class="jxr_keyword">public</strong> List&lt;TypeDeterminingHeuristic&lt;?&gt;&gt; getTypeStrategies() {
-<a class="jxr_linenumber" name="128" href="#128">128</a> 
-<a class="jxr_linenumber" name="129" href="#129">129</a>         <strong class="jxr_keyword">return</strong> rowOfTypeStrategies;
-<a class="jxr_linenumber" name="130" href="#130">130</a>     }
-<a class="jxr_linenumber" name="131" href="#131">131</a> 
-<a class="jxr_linenumber" name="132" href="#132">132</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="133" href="#133">133</a> <em class="jxr_javadoccomment">     * Use this to recover and interrogate the range determining strategy instances used in scanning.</em>
-<a class="jxr_linenumber" name="134" href="#134">134</a> <em class="jxr_javadoccomment">     * </em>
-<a class="jxr_linenumber" name="135" href="#135">135</a> <em class="jxr_javadoccomment">     * @return the row of strategies used to determine the ranges of fields</em>
-<a class="jxr_linenumber" name="136" href="#136">136</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="137" href="#137">137</a>     <strong class="jxr_keyword">public</strong> List&lt;RangeDeterminingHeuristic&lt;?&gt;&gt; getRangeStrategies() {
-<a class="jxr_linenumber" name="138" href="#138">138</a>         <strong class="jxr_keyword">return</strong> rowOfRangeStrategies;
-<a class="jxr_linenumber" name="139" href="#139">139</a>     }
-<a class="jxr_linenumber" name="140" href="#140">140</a> 
-<a class="jxr_linenumber" name="141" href="#141">141</a>     <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="142" href="#142">142</a> <em class="jxr_javadoccomment">     * Use this to recover and interrogate the enumerated-values determining strategy instances used in scanning.</em>
-<a class="jxr_linenumber" name="143" href="#143">143</a> <em class="jxr_javadoccomment">     * </em>
-<a class="jxr_linenumber" name="144" href="#144">144</a> <em class="jxr_javadoccomment">     * @return the row of strategies used to determine the enumerated values presented in fields</em>
-<a class="jxr_linenumber" name="145" href="#145">145</a> <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="146" href="#146">146</a>     <strong class="jxr_keyword">public</strong> List&lt;EnumeratedValuesHeuristic&lt;?&gt;&gt; getEnumStrategies() {
-<a class="jxr_linenumber" name="147" href="#147">147</a>         <strong class="jxr_keyword">return</strong> rowOfEnumStrategies;
-<a class="jxr_linenumber" name="148" href="#148">148</a>     }
-<a class="jxr_linenumber" name="149" href="#149">149</a> 
-<a class="jxr_linenumber" name="150" href="#150">150</a> }
+<a class="jxr_linenumber" name="128" href="#128">128</a>         <strong class="jxr_keyword">return</strong> rowOfTypeStrategies;
+<a class="jxr_linenumber" name="129" href="#129">129</a>     }
+<a class="jxr_linenumber" name="130" href="#130">130</a> 
+<a class="jxr_linenumber" name="131" href="#131">131</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="132" href="#132">132</a> <em class="jxr_javadoccomment">     * Use this to recover and interrogate the range determining strategy instances used in scanning.</em>
+<a class="jxr_linenumber" name="133" href="#133">133</a> <em class="jxr_javadoccomment">     * </em>
+<a class="jxr_linenumber" name="134" href="#134">134</a> <em class="jxr_javadoccomment">     * @return the row of strategies used to determine the ranges of fields</em>
+<a class="jxr_linenumber" name="135" href="#135">135</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="136" href="#136">136</a>     <strong class="jxr_keyword">public</strong> List&lt;RangeDeterminingHeuristic&lt;?&gt;&gt; getRangeStrategies() {
+<a class="jxr_linenumber" name="137" href="#137">137</a>         <strong class="jxr_keyword">return</strong> rowOfRangeStrategies;
+<a class="jxr_linenumber" name="138" href="#138">138</a>     }
+<a class="jxr_linenumber" name="139" href="#139">139</a> 
+<a class="jxr_linenumber" name="140" href="#140">140</a>     <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="141" href="#141">141</a> <em class="jxr_javadoccomment">     * Use this to recover and interrogate the enumerated-values determining strategy instances used in scanning.</em>
+<a class="jxr_linenumber" name="142" href="#142">142</a> <em class="jxr_javadoccomment">     * </em>
+<a class="jxr_linenumber" name="143" href="#143">143</a> <em class="jxr_javadoccomment">     * @return the row of strategies used to determine the enumerated values presented in fields</em>
+<a class="jxr_linenumber" name="144" href="#144">144</a> <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="145" href="#145">145</a>     <strong class="jxr_keyword">public</strong> List&lt;EnumeratedValuesHeuristic&lt;?&gt;&gt; getEnumStrategies() {
+<a class="jxr_linenumber" name="146" href="#146">146</a>         <strong class="jxr_keyword">return</strong> rowOfEnumStrategies;
+<a class="jxr_linenumber" name="147" href="#147">147</a>     }
+<a class="jxr_linenumber" name="148" href="#148">148</a> }
 </pre>
 <hr/><div id="footer">This page was automatically generated by <a href="http://maven.apache.org/">Maven</a></div></body>
 </html>

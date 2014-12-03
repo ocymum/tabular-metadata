@@ -8,3 +8,4 @@ com.asoroka.sidora.tabularmetadata.heuristics.headers
 com.asoroka.sidora.tabularmetadata.heuristics.ranges
 com.asoroka.sidora.tabularmetadata.heuristics.types
 com.asoroka.sidora.tabularmetadata.spring.defaults
+com.asoroka.sidora.tabularmetadata.web

@@ -30,11 +30,11 @@
 <a class="jxr_linenumber" name="20" href="#20">20</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger log = getLogger(FractionHeuristic.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="21" href="#21">21</a>  
 <a class="jxr_linenumber" name="22" href="#22">22</a>      <em class="jxr_javadoccomment">/**</em>
-<a class="jxr_linenumber" name="23" href="#23">23</a>  <em class="jxr_javadoccomment">     * @param d The fraction of nonparsing values to permit</em>
+<a class="jxr_linenumber" name="23" href="#23">23</a>  <em class="jxr_javadoccomment">     * @param nonParsingFraction The fraction of nonparsing values to permit</em>
 <a class="jxr_linenumber" name="24" href="#24">24</a>  <em class="jxr_javadoccomment">     */</em>
-<a class="jxr_linenumber" name="25" href="#25">25</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../../com/asoroka/sidora/tabularmetadata/heuristics/types/FractionHeuristic.html">FractionHeuristic</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> d) {
+<a class="jxr_linenumber" name="25" href="#25">25</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../../com/asoroka/sidora/tabularmetadata/heuristics/types/FractionHeuristic.html">FractionHeuristic</a>(<strong class="jxr_keyword">final</strong> <strong class="jxr_keyword">float</strong> nonParsingFraction) {
 <a class="jxr_linenumber" name="26" href="#26">26</a>          <strong class="jxr_keyword">super</strong>();
-<a class="jxr_linenumber" name="27" href="#27">27</a>          <strong class="jxr_keyword">this</strong>.fractionOfAllowedNonparseables = d;
+<a class="jxr_linenumber" name="27" href="#27">27</a>          <strong class="jxr_keyword">this</strong>.fractionOfAllowedNonparseables = nonParsingFraction;
 <a class="jxr_linenumber" name="28" href="#28">28</a>      }
 <a class="jxr_linenumber" name="29" href="#29">29</a>  
 <a class="jxr_linenumber" name="30" href="#30">30</a>      @Override
@@ -53,7 +53,7 @@
 <a class="jxr_linenumber" name="43" href="#43">43</a>      }
 <a class="jxr_linenumber" name="44" href="#44">44</a>  
 <a class="jxr_linenumber" name="45" href="#45">45</a>      @Override
-<a class="jxr_linenumber" name="46" href="#46">46</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../../com/asoroka/sidora/tabularmetadata/heuristics/types/FractionHeuristic.html">FractionHeuristic</a> clone() {
+<a class="jxr_linenumber" name="46" href="#46">46</a>      <strong class="jxr_keyword">public</strong> <a href="../../../../../../com/asoroka/sidora/tabularmetadata/heuristics/types/FractionHeuristic.html">FractionHeuristic</a> newInstance() {
 <a class="jxr_linenumber" name="47" href="#47">47</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> <a href="../../../../../../com/asoroka/sidora/tabularmetadata/heuristics/types/FractionHeuristic.html">FractionHeuristic</a>(fractionOfAllowedNonparseables);
 <a class="jxr_linenumber" name="48" href="#48">48</a>      }
 <a class="jxr_linenumber" name="49" href="#49">49</a>  
