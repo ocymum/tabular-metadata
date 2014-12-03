@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>ValueCountingHeuristic.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata.heuristics</a> &gt; <span class="el_source">ValueCountingHeuristic.java</span></div><h1>ValueCountingHeuristic.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata.heuristics;
+
+import static org.slf4j.LoggerFactory.getLogger;
+
+import org.slf4j.Logger;
+
+/**
+ * A {@link Heuristic} that counts the number of values received.
+ * 
+ * @author ajs6f
+ */
+<span class="fc" id="L13">public abstract class ValueCountingHeuristic&lt;SelfType extends ValueCountingHeuristic&lt;SelfType&gt;&gt; extends</span>
+        AbstractHeuristic&lt;SelfType&gt; {
+
+    private int totalNumValues;
+
+    /**
+     * Set the counter of values seen to zero.
+     * 
+     * @author ajs6f
+     */
+    @Override
+    public void reset() {
+<span class="fc" id="L25">        this.totalNumValues = 0;</span>
+<span class="fc" id="L26">    }</span>
+
+<span class="fc" id="L28">    private static final Logger log = getLogger(ValueCountingHeuristic.class);</span>
+
+    @Override
+    public boolean addValue(final String value) {
+<span class="fc" id="L32">        log.trace(&quot;Received new value: {}&quot;, value);</span>
+<span class="fc" id="L33">        totalNumValues++;</span>
+<span class="fc" id="L34">        return true;</span>
+    }
+
+    public int totalNumValues() {
+<span class="fc" id="L38">        return totalNumValues;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

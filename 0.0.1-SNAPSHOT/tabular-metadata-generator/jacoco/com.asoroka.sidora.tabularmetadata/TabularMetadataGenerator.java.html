@@ -1,0 +1,194 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TabularMetadataGenerator.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata</a> &gt; <span class="el_source">TabularMetadataGenerator.java</span></div><h1>TabularMetadataGenerator.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata;
+
+import static com.google.common.base.Charsets.UTF_8;
+import static com.google.common.collect.Iterators.peekingIterator;
+import static com.google.common.collect.Lists.newArrayList;
+import static com.google.common.collect.Lists.transform;
+import static org.apache.commons.csv.CSVFormat.DEFAULT;
+import static org.apache.commons.csv.CSVParser.parse;
+
+import java.io.IOException;
+import java.net.URL;
+import java.nio.charset.Charset;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.SortedSet;
+
+import javax.inject.Inject;
+
+import org.apache.commons.csv.CSVFormat;
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+
+import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.asoroka.sidora.tabularmetadata.formats.TabularFormat;
+import com.asoroka.sidora.tabularmetadata.heuristics.enumerations.EnumeratedValuesHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.enumerations.InMemoryEnumeratedValuesHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.headers.DefaultHeaderHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.headers.HeaderHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.ranges.RangeDeterminingHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.ranges.RunningMinMaxHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.types.StrictHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.types.TypeDeterminingHeuristic;
+import com.google.common.base.Function;
+import com.google.common.collect.PeekingIterator;
+import com.google.common.collect.Range;
+
+/**
+ * Master entry point for this API. This is the class from which all parsing should initiate, via
+ * {@link #getMetadata(URL)}.
+ * 
+ * @author ajs6f
+ */
+<span class="fc" id="L47">public class TabularMetadataGenerator {</span>
+
+<span class="fc" id="L49">    private static final Charset CHARACTER_ENCODING = UTF_8;</span>
+
+<span class="fc" id="L51">    private CSVFormat format = DEFAULT;</span>
+
+    /**
+     * Default value of {@code 0} indicates no limit. See {@link TabularScanner.scan(final int limit)}.
+     */
+<span class="fc" id="L56">    private Integer scanLimit = 0;</span>
+
+<span class="fc" id="L58">    private RangeDeterminingHeuristic&lt;?&gt; rangeStrategy = new RunningMinMaxHeuristic();</span>
+
+<span class="fc" id="L60">    private TypeDeterminingHeuristic&lt;?&gt; typeStrategy = new StrictHeuristic();</span>
+
+<span class="fc" id="L62">    private EnumeratedValuesHeuristic&lt;?&gt; enumStrategy = new InMemoryEnumeratedValuesHeuristic();</span>
+
+<span class="fc" id="L64">    private HeaderHeuristic&lt;?&gt; headerStrategy = new DefaultHeaderHeuristic();</span>
+
+    /**
+     * The main entry point to application workflow.
+     * 
+     * @param dataUrl Where to find some tabular data.
+     * @return The results of metadata extraction.
+     * @throws IOException
+     */
+    public TabularMetadata getMetadata(final URL dataUrl) throws IOException {
+
+<span class="fc" id="L75">        try (CSVParser csvParser = parse(dataUrl, CHARACTER_ENCODING, format)) {</span>
+<span class="fc" id="L76">            final PeekingIterator&lt;CSVRecord&gt; parser = peekingIterator(csvParser.iterator());</span>
+            // TODO allow a HeaderHeuristic to use more information than the first line of data
+<span class="fc" id="L78">            final CSVRecord firstLine = parser.peek();</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">            for (final String field : firstLine) {</span>
+<span class="fc" id="L80">                headerStrategy.addValue(field);</span>
+<span class="fc" id="L81">            }</span>
+<span class="fc" id="L82">            final boolean hasHeaders = headerStrategy.isHeader();</span>
+<span class="fc" id="L83">            headerStrategy.reset();</span>
+            final List&lt;String&gt; headerNames;
+<span class="fc bfc" id="L85" title="All 2 branches covered.">            if (hasHeaders) {</span>
+<span class="fc" id="L86">                headerNames = newArrayList(firstLine);</span>
+<span class="fc" id="L87">                parser.next();</span>
+            }
+            else {
+<span class="fc" id="L90">                headerNames = emptyHeaders(firstLine.size());</span>
+            }
+            // scan values up to the limit
+<span class="fc" id="L93">            final TabularScanner scanner = new TabularScanner(parser, typeStrategy, rangeStrategy, enumStrategy);</span>
+<span class="fc" id="L94">            scanner.scan(scanLimit);</span>
+
+<span class="fc" id="L96">            final List&lt;TypeDeterminingHeuristic&lt;?&gt;&gt; typeStrategies = scanner.getTypeStrategies();</span>
+<span class="fc" id="L97">            final List&lt;RangeDeterminingHeuristic&lt;?&gt;&gt; rangeStrategies = scanner.getRangeStrategies();</span>
+<span class="fc" id="L98">            final List&lt;EnumeratedValuesHeuristic&lt;?&gt;&gt; enumStrategies = scanner.getEnumStrategies();</span>
+
+            // extract the results for each field
+<span class="fc" id="L101">            final List&lt;SortedSet&lt;DataType&gt;&gt; columnTypes = transform(typeStrategies, extractType);</span>
+<span class="fc" id="L102">            final List&lt;Map&lt;DataType, Range&lt;?&gt;&gt;&gt; minMaxes = transform(rangeStrategies, extractMinMax);</span>
+<span class="fc" id="L103">            final List&lt;Map&lt;DataType, Set&lt;String&gt;&gt;&gt; enumValues = transform(enumStrategies, extractEnumValues);</span>
+
+<span class="fc" id="L105">            return new TabularMetadata(headerNames, columnTypes, minMaxes, enumValues);</span>
+<span class="pc bpc" id="L106" title="4 of 8 branches missed.">        } catch (final NoSuchElementException e) {</span>
+<span class="fc" id="L107">            throw new EmptyDataFileException(dataUrl + &quot; has no data in it!&quot;);</span>
+        }
+    }
+
+<span class="fc" id="L111">    private static final Function&lt;TypeDeterminingHeuristic&lt;?&gt;, SortedSet&lt;DataType&gt;&gt; extractType =</span>
+<span class="fc" id="L112">            new Function&lt;TypeDeterminingHeuristic&lt;?&gt;, SortedSet&lt;DataType&gt;&gt;() {</span>
+
+                @Override
+                public SortedSet&lt;DataType&gt; apply(final TypeDeterminingHeuristic&lt;?&gt; strategy) {
+<span class="fc" id="L116">                    return strategy.typesAsLikely();</span>
+                }
+            };
+
+<span class="fc" id="L120">    private static final Function&lt;RangeDeterminingHeuristic&lt;?&gt;, Map&lt;DataType, Range&lt;?&gt;&gt;&gt; extractMinMax =</span>
+<span class="fc" id="L121">            new Function&lt;RangeDeterminingHeuristic&lt;?&gt;, Map&lt;DataType, Range&lt;?&gt;&gt;&gt;() {</span>
+
+                @Override
+                public Map&lt;DataType, Range&lt;?&gt;&gt; apply(final RangeDeterminingHeuristic&lt;?&gt; strategy) {
+<span class="fc" id="L125">                    return strategy.getRanges();</span>
+                }
+            };
+
+<span class="fc" id="L129">    private static final Function&lt;EnumeratedValuesHeuristic&lt;?&gt;, Map&lt;DataType, Set&lt;String&gt;&gt;&gt; extractEnumValues =</span>
+<span class="fc" id="L130">            new Function&lt;EnumeratedValuesHeuristic&lt;?&gt;, Map&lt;DataType, Set&lt;String&gt;&gt;&gt;() {</span>
+
+                @Override
+                public Map&lt;DataType, Set&lt;String&gt;&gt; apply(final EnumeratedValuesHeuristic&lt;?&gt; strategy) {
+<span class="fc" id="L134">                    return strategy.getEnumeratedValues();</span>
+                }
+            };
+
+    private static final List&lt;String&gt; emptyHeaders(final int numFields) {
+<span class="fc" id="L139">        final List&lt;String&gt; headers = new ArrayList&lt;&gt;(numFields);</span>
+<span class="fc bfc" id="L140" title="All 2 branches covered.">        for (int i = 1; i &lt;= numFields; i++) {</span>
+<span class="fc" id="L141">            headers.add(&quot;Variable &quot; + i);</span>
+        }
+<span class="fc" id="L143">        return headers;</span>
+    }
+
+    /**
+     * @param scanLimit A limit to the number of rows to scan, including any header row that may be present. {@code 0}
+     *        indicates no limit.
+     */
+    public void setScanLimit(final Integer scanLimit) {
+<span class="fc" id="L151">        this.scanLimit = scanLimit;</span>
+<span class="fc" id="L152">    }</span>
+
+    /**
+     * @param strategy The header recognition strategy to use.
+     */
+    @Inject
+    public &lt;H extends HeaderHeuristic&lt;?&gt;&gt; void setHeaderStrategy(final H strategy) {
+<span class="fc" id="L159">        this.headerStrategy = strategy;</span>
+<span class="fc" id="L160">    }</span>
+
+    /**
+     * @param format The tabular data format to expect.
+     */
+    @Inject
+    public void setFormat(final TabularFormat format) {
+<span class="fc" id="L167">        this.format = format.get();</span>
+<span class="fc" id="L168">    }</span>
+
+    /**
+     * @param strategy The type recognition strategy to use.
+     */
+    @Inject
+    public void setTypeStrategy(final TypeDeterminingHeuristic&lt;?&gt; strategy) {
+<span class="fc" id="L175">        this.typeStrategy = strategy;</span>
+<span class="fc" id="L176">    }</span>
+
+    /**
+     * @param strategy The range recognition strategy to use.
+     */
+    @Inject
+    public void setRangeStrategy(final RangeDeterminingHeuristic&lt;?&gt; strategy) {
+<span class="fc" id="L183">        this.rangeStrategy = strategy;</span>
+<span class="fc" id="L184">    }</span>
+
+    /**
+     * @param strategy The enumerated-values recognition strategy to use.
+     */
+    @Inject
+    public void setEnumStrategy(final EnumeratedValuesHeuristic&lt;?&gt; strategy) {
+<span class="fc" id="L191">        this.enumStrategy = strategy;</span>
+<span class="fc" id="L192">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

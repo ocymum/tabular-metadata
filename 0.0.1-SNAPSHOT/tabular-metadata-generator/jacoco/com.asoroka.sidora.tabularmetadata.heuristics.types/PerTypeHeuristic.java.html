@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>PerTypeHeuristic.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata.heuristics.types</a> &gt; <span class="el_source">PerTypeHeuristic.java</span></div><h1>PerTypeHeuristic.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata.heuristics.types;
+
+import static com.asoroka.sidora.tabularmetadata.datatype.DataType.sortByHierarchy;
+import static com.google.common.collect.Sets.filter;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.Set;
+import java.util.SortedSet;
+
+import org.slf4j.Logger;
+
+import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+import com.google.common.base.Predicate;
+
+/**
+ * A {@link TypeDeterminingHeuristic} that uses some test that maps types to boolean acceptance values. The test is
+ * created by overriding {@link #candidacy(DataType)}. Types are passed or rejected without any particular order other
+ * than specificity of type within the hierarchy.
+ * 
+ * @author ajs6f
+ * @param &lt;SelfType&gt;
+ */
+<span class="fc" id="L24">public abstract class PerTypeHeuristic&lt;SelfType extends PerTypeHeuristic&lt;SelfType&gt; &amp; TypeDeterminingHeuristic&lt;SelfType&gt;&gt;</span>
+        extends CountAggregatingHeuristic&lt;SelfType&gt;
+        implements TypeDeterminingHeuristic&lt;SelfType&gt; {
+
+<span class="fc" id="L28">    private static final Logger log = getLogger(PerTypeHeuristic.class);</span>
+
+    @Override
+    public SortedSet&lt;DataType&gt; typesAsLikely() {
+        // develop a set of candidate types in a manner specific to the subclass
+<span class="fc" id="L33">        final Set&lt;DataType&gt; possibleTypes = filter(DataType.valuesSet(), candidacyPredicate);</span>
+        // order by hierarchy
+<span class="fc" id="L35">        final SortedSet&lt;DataType&gt; sortedCandidates = sortByHierarchy(possibleTypes);</span>
+<span class="fc" id="L36">        log.trace(&quot;Found candidate types: {}&quot;, sortedCandidates);</span>
+
+<span class="fc" id="L38">        return sortedCandidates;</span>
+    }
+
+    @Override
+    public DataType mostLikelyType() {
+<span class="fc" id="L43">        return typesAsLikely().first();</span>
+    }
+
+<span class="fc" id="L46">    private Predicate&lt;DataType&gt; candidacyPredicate = new Predicate&lt;DataType&gt;() {</span>
+
+        @Override
+        public boolean apply(final DataType type) {
+<span class="fc" id="L50">            return candidacy(type);</span>
+        }
+    };
+
+    /**
+     * Subclasses must override this method with an algorithm that uses the gathered statistics (and possibly other
+     * information) to make a determination about the most likely type of the proffered values.
+     * 
+     * @return Whether this type should be considered as a candidate for selection.
+     */
+    protected abstract boolean candidacy(final DataType type);
+
+    @Override
+    public abstract SelfType newInstance();
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>
