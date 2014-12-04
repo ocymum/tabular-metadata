@@ -1,0 +1,12 @@
+com.asoroka.sidora.tabularmetadata
+com.asoroka.sidora.tabularmetadata.datatype
+com.asoroka.sidora.tabularmetadata.formats
+com.asoroka.sidora.tabularmetadata.heuristics
+com.asoroka.sidora.tabularmetadata.heuristics.enumerations
+com.asoroka.sidora.tabularmetadata.heuristics.headers
+com.asoroka.sidora.tabularmetadata.heuristics.ranges
+com.asoroka.sidora.tabularmetadata.heuristics.types
+com.asoroka.sidora.tabularmetadata.integration
+com.asoroka.sidora.tabularmetadata.spring
+com.asoroka.sidora.tabularmetadata.testframework
+com.asoroka.sidora.tabularmetadata.web
