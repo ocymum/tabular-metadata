@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>RegexpHeaderHeuristic.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata.heuristics.headers</a> &gt; <span class="el_source">RegexpHeaderHeuristic.java</span></div><h1>RegexpHeaderHeuristic.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata.heuristics.headers;
+
+import static com.google.common.base.Predicates.contains;
+import static java.util.regex.Pattern.compile;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.regex.Pattern;
+
+import org.slf4j.Logger;
+
+import com.google.common.base.Predicate;
+
+/**
+ * A {@link HeaderHeuristic} that uses a regular expression applied to each field in a row to determine whether the
+ * row is a header row.
+ * 
+ * @author ajs6f
+ */
+public class RegexpHeaderHeuristic extends TreatsEachFieldAlikeHeaderHeuristic&lt;RegexpHeaderHeuristic&gt; {
+
+    private final Pattern regexp;
+
+<span class="nc" id="L24">    private static final Logger log = getLogger(RegexpHeaderHeuristic.class);</span>
+
+    /**
+     * @param regexp The regular expression against which to match.
+     */
+<span class="nc" id="L29">    public RegexpHeaderHeuristic(final String regexp) {</span>
+<span class="nc" id="L30">        log.debug(&quot;Using {} for header determination with pattern {}.&quot;, this.getClass(), regexp);</span>
+<span class="nc" id="L31">        this.regexp = compile(regexp);</span>
+<span class="nc" id="L32">    }</span>
+
+    @Override
+    protected Predicate&lt;CharSequence&gt; fieldTest() {
+<span class="nc" id="L36">        return contains(regexp);</span>
+    }
+
+    @Override
+    public RegexpHeaderHeuristic get() {
+<span class="nc" id="L41">        return this;</span>
+    }
+
+    @Override
+    public RegexpHeaderHeuristic newInstance() {
+<span class="nc" id="L46">        return new RegexpHeaderHeuristic(regexp.pattern());</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

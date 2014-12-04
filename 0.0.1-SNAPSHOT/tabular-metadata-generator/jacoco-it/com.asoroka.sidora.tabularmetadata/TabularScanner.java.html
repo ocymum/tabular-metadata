@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>TabularScanner.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata</a> &gt; <span class="el_source">TabularScanner.java</span></div><h1>TabularScanner.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata;
+
+import static com.google.common.collect.Iterators.advance;
+import static com.google.common.collect.Iterators.cycle;
+import static com.google.common.collect.Iterators.peekingIterator;
+import static org.slf4j.LoggerFactory.getLogger;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.apache.commons.csv.CSVParser;
+import org.apache.commons.csv.CSVRecord;
+import org.slf4j.Logger;
+
+import com.asoroka.sidora.tabularmetadata.heuristics.enumerations.EnumeratedValuesHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.ranges.RangeDeterminingHeuristic;
+import com.asoroka.sidora.tabularmetadata.heuristics.types.TypeDeterminingHeuristic;
+import com.google.common.collect.AbstractIterator;
+import com.google.common.collect.PeekingIterator;
+
+/**
+ * Value scanning workflow. Handed a {@link CSVParser}, this class will scan through it and supply the values of
+ * fields to a configured &quot;row&quot; of {@link ValueHeuristic} strategies cloned from the configured choice.
+ * 
+ * @author ajs6f
+ */
+public class TabularScanner extends AbstractIterator&lt;CSVRecord&gt; {
+
+    private final PeekingIterator&lt;CSVRecord&gt; internalScanner;
+
+    private final Iterator&lt;TypeDeterminingHeuristic&lt;?&gt;&gt; typeStrategies;
+
+    private final List&lt;TypeDeterminingHeuristic&lt;?&gt;&gt; rowOfTypeStrategies;
+
+    private final Iterator&lt;EnumeratedValuesHeuristic&lt;?&gt;&gt; enumStrategies;
+
+    private final List&lt;EnumeratedValuesHeuristic&lt;?&gt;&gt; rowOfEnumStrategies;
+
+    private final Iterator&lt;RangeDeterminingHeuristic&lt;?&gt;&gt; rangeStrategies;
+
+    private final List&lt;RangeDeterminingHeuristic&lt;?&gt;&gt; rowOfRangeStrategies;
+
+<span class="fc" id="L45">    private static final Logger log = getLogger(TabularScanner.class);</span>
+
+    public TabularScanner(final Iterator&lt;CSVRecord&gt; parser, final TypeDeterminingHeuristic&lt;?&gt; typeStrategy,
+<span class="fc" id="L48">            final RangeDeterminingHeuristic&lt;?&gt; rangeStrategy, final EnumeratedValuesHeuristic&lt;?&gt; enumStrategy) {</span>
+<span class="fc" id="L49">        this.internalScanner = peekingIterator(parser);</span>
+<span class="fc" id="L50">        final int numColumns = internalScanner.peek().size();</span>
+
+<span class="fc" id="L52">        log.debug(&quot;Found {} columns in our data.&quot;, numColumns);</span>
+        // create a &quot;row&quot; of type strategy instances of the same length as the rows in our data
+<span class="fc" id="L54">        this.rowOfTypeStrategies = new ArrayList&lt;&gt;(numColumns);</span>
+        int i;
+<span class="fc bfc" id="L56" title="All 2 branches covered.">        for (i = 0; i &lt; numColumns; i++) {</span>
+<span class="fc" id="L57">            rowOfTypeStrategies.add(typeStrategy.newInstance());</span>
+        }
+        // this.typeStrategies will cycle endlessly around our row
+<span class="fc" id="L60">        this.typeStrategies = cycle(rowOfTypeStrategies);</span>
+
+        // create a &quot;row&quot; of range strategy instances of the same length as the rows in our data
+<span class="fc" id="L63">        this.rowOfRangeStrategies = new ArrayList&lt;&gt;(numColumns);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">        for (i = 0; i &lt; numColumns; i++) {</span>
+<span class="fc" id="L65">            rowOfRangeStrategies.add(rangeStrategy.newInstance());</span>
+        }
+        // this.rangeStrategies will cycle endlessly around our row
+<span class="fc" id="L68">        this.rangeStrategies = cycle(rowOfRangeStrategies);</span>
+
+        // create a &quot;row&quot; of enum strategy instances of the same length as the rows in our data
+<span class="fc" id="L71">        this.rowOfEnumStrategies = new ArrayList&lt;&gt;(numColumns);</span>
+<span class="fc bfc" id="L72" title="All 2 branches covered.">        for (i = 0; i &lt; numColumns; i++) {</span>
+<span class="fc" id="L73">            rowOfEnumStrategies.add(enumStrategy.newInstance());</span>
+        }
+        // this.enumStrategies will cycle endlessly around our row
+<span class="fc" id="L76">        this.enumStrategies = cycle(rowOfEnumStrategies);</span>
+<span class="fc" id="L77">    }</span>
+
+    @Override
+    protected CSVRecord computeNext() {
+<span class="fc bfc" id="L81" title="All 2 branches covered.">        if (internalScanner.hasNext()) {</span>
+<span class="fc" id="L82">            final CSVRecord nextRecord = internalScanner.next();</span>
+<span class="fc" id="L83">            log.trace(&quot;Operating on row: {}&quot;, nextRecord);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">            for (final String lex : nextRecord) {</span>
+<span class="fc" id="L85">                log.trace(&quot;Operating on lex: {}&quot;, lex);</span>
+<span class="fc" id="L86">                final boolean rangeStrategiesShouldContinue = rangeStrategies.next().addValue(lex);</span>
+<span class="fc" id="L87">                final boolean typeStrategiesShouldContinue = typeStrategies.next().addValue(lex);</span>
+<span class="fc" id="L88">                final boolean enumStrategiesShouldContinue = enumStrategies.next().addValue(lex);</span>
+<span class="fc" id="L89">                log.trace(</span>
+                        &quot;Continue flag received from range strategy: {}, from type strategy: {}, from enum strategy: {}.&quot;,
+                        rangeStrategiesShouldContinue, typeStrategiesShouldContinue, enumStrategiesShouldContinue);
+                // if any heuristic is not done, we aren't done
+<span class="pc bpc" id="L93" title="5 of 6 branches missed.">                final boolean shouldContinue =</span>
+                        rangeStrategiesShouldContinue || typeStrategiesShouldContinue || enumStrategiesShouldContinue;
+<span class="pc bpc" id="L95" title="1 of 2 branches missed.">                if (!shouldContinue) {</span>
+<span class="nc" id="L96">                    log.trace(&quot;Short circuiting operation because all heuristics have finished.&quot;);</span>
+<span class="nc" id="L97">                    return endOfData();</span>
+                }
+<span class="fc" id="L99">            }</span>
+<span class="fc" id="L100">            return nextRecord;</span>
+        }
+<span class="fc" id="L102">        return endOfData();</span>
+    }
+
+    /**
+     * Scan rows in our data up to a limit, exhausting values from the internal parser as we do. &lt;br/&gt;
+     * WARNING: Do not call this more than once on a {@link TabularScanner}. The internal parser of a scanner cannot
+     * be reset.
+     * 
+     * @param limit The number of rows to scan, 0 for all rows.
+     */
+    public void scan(final int limit) {
+<span class="pc bpc" id="L113" title="1 of 2 branches missed.">        if (limit == 0) {</span>
+<span class="fc bfc" id="L114" title="All 2 branches covered.">            while (hasNext()) {</span>
+<span class="fc" id="L115">                next();</span>
+            }
+        } else {
+<span class="nc" id="L118">            advance(this, limit);</span>
+        }
+<span class="fc" id="L120">    }</span>
+
+    /**
+     * Use this to recover and interrogate the type determining strategy instances used in scanning.
+     * 
+     * @return the row of strategies used to determine the types of fields
+     */
+    public List&lt;TypeDeterminingHeuristic&lt;?&gt;&gt; getTypeStrategies() {
+<span class="fc" id="L128">        return rowOfTypeStrategies;</span>
+    }
+
+    /**
+     * Use this to recover and interrogate the range determining strategy instances used in scanning.
+     * 
+     * @return the row of strategies used to determine the ranges of fields
+     */
+    public List&lt;RangeDeterminingHeuristic&lt;?&gt;&gt; getRangeStrategies() {
+<span class="fc" id="L137">        return rowOfRangeStrategies;</span>
+    }
+
+    /**
+     * Use this to recover and interrogate the enumerated-values determining strategy instances used in scanning.
+     * 
+     * @return the row of strategies used to determine the enumerated values presented in fields
+     */
+    public List&lt;EnumeratedValuesHeuristic&lt;?&gt;&gt; getEnumStrategies() {
+<span class="fc" id="L146">        return rowOfEnumStrategies;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

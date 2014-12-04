@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>MinimumDistanceBetweenNonparseablesHeuristic.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata.heuristics.types</a> &gt; <span class="el_source">MinimumDistanceBetweenNonparseablesHeuristic.java</span></div><h1>MinimumDistanceBetweenNonparseablesHeuristic.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata.heuristics.types;
+
+import static com.asoroka.sidora.tabularmetadata.datatype.DataType.parseableAs;
+import static com.google.common.base.Functions.constant;
+import static com.google.common.collect.Maps.toMap;
+import static java.lang.Float.NEGATIVE_INFINITY;
+import static java.util.EnumSet.complementOf;
+
+import java.util.EnumMap;
+import java.util.EnumSet;
+import java.util.Map;
+
+import com.asoroka.sidora.tabularmetadata.datatype.DataType;
+
+public class MinimumDistanceBetweenNonparseablesHeuristic extends
+        PerTypeHeuristic&lt;MinimumDistanceBetweenNonparseablesHeuristic&gt; {
+
+    private final int minimumDistance;
+
+    private Map&lt;DataType, Boolean&gt; candidateTypes;
+
+    /**
+     * We define locations as {@link Float}s in order to use the special value {@link Float#NEGATIVE_INFINITY}, which
+     * does not exist for integer types in Java.
+     */
+    private Map&lt;DataType, Float&gt; locationsOfLastNonparseables;
+
+    public MinimumDistanceBetweenNonparseablesHeuristic(final int minimumDistance) {
+<span class="nc" id="L30">        super();</span>
+<span class="nc" id="L31">        this.minimumDistance = minimumDistance;</span>
+<span class="nc" id="L32">    }</span>
+
+    @Override
+    public void reset() {
+<span class="nc" id="L36">        super.reset();</span>
+<span class="nc" id="L37">        candidateTypes = new EnumMap&lt;&gt;(DataType.class);</span>
+<span class="nc" id="L38">        locationsOfLastNonparseables = new EnumMap&lt;&gt;(DataType.class);</span>
+        // assume that every type is a candidate
+<span class="nc" id="L40">        final Map&lt;DataType, Boolean&gt; allTrue = toMap(DataType.valuesSet(), constant(true));</span>
+<span class="nc" id="L41">        candidateTypes.putAll(allTrue);</span>
+
+        // record that we haven't yet seen any nonparseables
+<span class="nc" id="L44">        final Map&lt;DataType, Float&gt; originalLocations = toMap(DataType.valuesSet(), constant(NEGATIVE_INFINITY));</span>
+<span class="nc" id="L45">        locationsOfLastNonparseables.putAll(originalLocations);</span>
+<span class="nc" id="L46">    }</span>
+
+    @Override
+    protected boolean candidacy(final DataType type) {
+<span class="nc" id="L50">        return candidateTypes.get(type);</span>
+    }
+
+    @Override
+    public boolean addValue(final String value) {
+<span class="nc bnc" id="L55" title="All 2 branches missed.">        if (super.addValue(value)) {</span>
+<span class="nc bnc" id="L56" title="All 2 branches missed.">            for (final DataType type : notParseableAs(value)) {</span>
+<span class="nc" id="L57">                final float distanceToLastNonParseableOfThisType =</span>
+                        totalNumValues() - locationsOfLastNonparseables.get(type);
+<span class="nc bnc" id="L59" title="All 2 branches missed.">                if (distanceToLastNonParseableOfThisType &lt; minimumDistance) {</span>
+                    // it's been too soon since the last nonparseable value of this type, knock it out of the running
+<span class="nc" id="L61">                    candidateTypes.put(type, false);</span>
+                } else {
+                    // mark that we saw a nonparseable value for this type
+<span class="nc" id="L64">                    locationsOfLastNonparseables.put(type, (float) totalNumValues());</span>
+                }
+<span class="nc" id="L66">            }</span>
+<span class="nc" id="L67">            return true;</span>
+        }
+<span class="nc" id="L69">        return false;</span>
+    }
+
+    /**
+     * @param value
+     * @return an {@link EnumSet} of those DataTypes into which s cannot be parsed
+     */
+    private static EnumSet&lt;DataType&gt; notParseableAs(final String value) {
+<span class="nc" id="L77">        return complementOf(parseableAs(value));</span>
+    }
+
+    @Override
+    public MinimumDistanceBetweenNonparseablesHeuristic newInstance() {
+<span class="nc" id="L82">        return new MinimumDistanceBetweenNonparseablesHeuristic(minimumDistance);</span>
+    }
+
+    @Override
+    public MinimumDistanceBetweenNonparseablesHeuristic get() {
+<span class="nc" id="L87">        return this;</span>
+    }
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

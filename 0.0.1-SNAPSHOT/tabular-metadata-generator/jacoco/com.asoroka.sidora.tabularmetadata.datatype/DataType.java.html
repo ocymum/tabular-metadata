@@ -1,0 +1,304 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>DataType.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata.datatype</a> &gt; <span class="el_source">DataType.java</span></div><h1>DataType.java</h1><pre class="source lang-java linenums">/**
+ * TEMPORARY LICENSE HEADER STANDIN
+ * REPLACE WITH APPROPRIATE SIDORA LICENSE
+ */
+
+package com.asoroka.sidora.tabularmetadata.datatype;
+
+import static com.google.common.base.Suppliers.memoize;
+import static com.google.common.collect.FluentIterable.from;
+import static com.google.common.collect.Lists.transform;
+import static com.google.common.collect.Ordering.natural;
+import static com.google.common.collect.Sets.filter;
+import static java.lang.Float.parseFloat;
+import static java.lang.Integer.parseInt;
+import static java.util.Arrays.asList;
+import static java.util.EnumSet.allOf;
+import static java.util.EnumSet.copyOf;
+import static java.util.EnumSet.of;
+import static java.util.regex.Pattern.CASE_INSENSITIVE;
+import static java.util.regex.Pattern.compile;
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
+import static org.joda.time.format.DateTimeFormat.forPattern;
+import static org.joda.time.format.DateTimeFormat.fullDateTime;
+import static org.joda.time.format.DateTimeFormat.mediumDateTime;
+import static org.joda.time.format.DateTimeFormat.shortDateTime;
+import static org.joda.time.format.ISODateTimeFormat.dateOptionalTimeParser;
+import static org.joda.time.format.ISODateTimeFormat.dateTimeParser;
+
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Comparator;
+import java.util.EnumSet;
+import java.util.List;
+import java.util.SortedSet;
+import java.util.regex.Pattern;
+
+import org.joda.time.DateTime;
+import org.joda.time.format.DateTimeFormatter;
+
+import com.google.common.base.Function;
+import com.google.common.base.Predicate;
+import com.google.common.base.Supplier;
+import com.google.common.collect.ImmutableList;
+
+/**
+ * This enumeration constructs
+ * &lt;ul&gt;
+ * &lt;li&gt;our &quot;native&quot; type system, as well as&lt;/li&gt;
+ * &lt;li&gt;maps from lexical spaces in our system to selected portions of selected value spaces in the Java type system,
+ * and&lt;/li&gt;
+ * &lt;li&gt;maps from our types to types in the XSD type system.&lt;/li&gt;
+ * &lt;/ul&gt;
+ * It also offers convenience methods for working with our type system.
+ * 
+ * @author ajs6f
+ */
+<span class="fc" id="L57">public enum DataType {</span>
+
+<span class="fc" id="L59">    String(W3C_XML_SCHEMA_NS_URI + &quot;#string&quot;, null) {</span>
+
+        /*
+         * This override indicates that String is the top type.
+         */
+        @Override
+        public EnumSet&lt;DataType&gt; supertypes() {
+<span class="fc" id="L66">            return of((DataType) this);</span>
+        }
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public String parse(final java.lang.String s) {
+<span class="fc" id="L72">            return s;</span>
+        }
+    },
+<span class="fc" id="L75">    Decimal(W3C_XML_SCHEMA_NS_URI + &quot;#decimal&quot;, String) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public Float parse(final java.lang.String s) throws ParsingException {
+            try {
+<span class="fc" id="L81">                return parseFloat(s.trim());</span>
+<span class="fc" id="L82">            } catch (final NumberFormatException e) {</span>
+<span class="fc" id="L83">                throw new ParsingException(&quot;Could not parse as Decimal!&quot;, e);</span>
+            }
+        }
+    },
+<span class="fc" id="L87">    Integer(W3C_XML_SCHEMA_NS_URI + &quot;#integer&quot;, Decimal) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public Integer parse(final java.lang.String s) throws ParsingException {
+            try {
+<span class="fc" id="L93">                return parseInt(s.trim());</span>
+<span class="fc" id="L94">            } catch (final NumberFormatException e) {</span>
+<span class="fc" id="L95">                throw new ParsingException(&quot;Could not parse as Integer!&quot;, e);</span>
+            }
+        }
+    },
+<span class="fc" id="L99">    URI(W3C_XML_SCHEMA_NS_URI + &quot;#anyURI&quot;, String) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public URI parse(final java.lang.String s) throws ParsingException {
+            try {
+<span class="fc bfc" id="L105" title="All 2 branches covered.">                if (URI_REGEX.matcher(s).matches()) {</span>
+<span class="fc" id="L106">                    return new URI(s);</span>
+                }
+<span class="fc" id="L108">                throw new URISyntaxException(s, &quot;Could not validate URI!&quot;);</span>
+<span class="fc" id="L109">            } catch (final URISyntaxException e) {</span>
+<span class="fc" id="L110">                throw new ParsingException(&quot;Could not parse as URI!&quot;, e);</span>
+            }
+        }
+    },
+<span class="fc" id="L114">    NonNegativeInteger(W3C_XML_SCHEMA_NS_URI + &quot;#nonNegativeInteger&quot;, Integer) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public Integer parse(final java.lang.String s) throws ParsingException {
+
+<span class="fc" id="L120">            final Integer value = Integer.parse(s);</span>
+<span class="fc bfc" id="L121" title="All 2 branches covered.">            if (value &gt; -1) {</span>
+<span class="fc" id="L122">                return value;</span>
+            }
+<span class="fc" id="L124">            throw new ParsingException(&quot;Value was negative!&quot;);</span>
+        }
+    },
+<span class="fc" id="L127">    PositiveInteger(W3C_XML_SCHEMA_NS_URI + &quot;#positiveInteger&quot;, NonNegativeInteger) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public Integer parse(final java.lang.String s) throws ParsingException {
+<span class="fc" id="L132">            final Integer value = NonNegativeInteger.parse(s);</span>
+<span class="fc bfc" id="L133" title="All 2 branches covered.">            if (value &gt; 0) {</span>
+<span class="fc" id="L134">                return value;</span>
+            }
+<span class="fc" id="L136">            throw new ParsingException(&quot;Value was negative!&quot;);</span>
+        }
+    },
+<span class="fc" id="L139">    Geographic(null, String) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public GeographicValue parse(final String s) throws ParsingException {
+            try {
+<span class="fc" id="L145">                final List&lt;Float&gt; parts = transform(asList(s.split(&quot;,&quot;)), string2float);</span>
+<span class="fc" id="L146">                return new GeographicValue(parts);</span>
+<span class="fc" id="L147">            } catch (final NumberFormatException e) {</span>
+<span class="fc" id="L148">                throw new ParsingException(&quot;Could not parse as Geographic!&quot;, e);</span>
+            }
+        }
+    },
+<span class="fc" id="L152">    Boolean(W3C_XML_SCHEMA_NS_URI + &quot;#boolean&quot;, String) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public Boolean parse(final java.lang.String s) throws ParsingException {
+<span class="fc bfc" id="L157" title="All 2 branches covered.">            if (BOOLEAN_TRUE_REGEXP.matcher(s).matches()) {</span>
+<span class="fc" id="L158">                return true;</span>
+            }
+<span class="fc bfc" id="L160" title="All 2 branches covered.">            if (BOOLEAN_FALSE_REGEXP.matcher(s).matches()) {</span>
+<span class="fc" id="L161">                return false;</span>
+            }
+<span class="fc" id="L163">            throw new ParsingException(&quot;Could not parse as Boolean!&quot;);</span>
+        }
+    },
+<span class="fc" id="L166">    DateTime(W3C_XML_SCHEMA_NS_URI + &quot;#dateTime&quot;, String) {</span>
+
+        @SuppressWarnings(&quot;unchecked&quot;)
+        @Override
+        public DateTime parse(final java.lang.String s) throws ParsingException {
+<span class="fc bfc" id="L171" title="All 2 branches covered.">            for (final DateTimeFormatter format : dateTimeFormats) {</span>
+                try {
+<span class="fc" id="L173">                    return format.parseDateTime(s);</span>
+                }
+<span class="fc" id="L175">                catch (final IllegalArgumentException e) {</span>
+                    // log.trace(&quot;Could not parse date '{}' in form {}.&quot;);
+                }
+<span class="fc" id="L178">            }</span>
+<span class="fc" id="L179">            throw new ParsingException(&quot;Could not parse as DataTime!&quot;);</span>
+        }
+    };
+
+    public static final EnumSet&lt;DataType&gt; valuesSet() {
+<span class="fc" id="L184">        return allOf(DataType.class);</span>
+    }
+
+<span class="fc" id="L187">    private DataType(final String uri, final DataType supertype) {</span>
+<span class="fc bfc" id="L188" title="All 2 branches covered.">        this.uri = uri == null ? null : java.net.URI.create(uri);</span>
+<span class="fc" id="L189">        this.supertype = supertype;</span>
+<span class="fc" id="L190">    }</span>
+
+    /**
+     * An URI, if any, with which this DataType is associated
+     */
+    public final URI uri;
+
+    /**
+     * This DataType, recorded because Java doesn't handle lexical &quot;this&quot; as we might like.
+     */
+<span class="fc" id="L200">    final DataType self = this;</span>
+
+    /**
+     * The immediate supertype of this DataType.
+     */
+    final DataType supertype;
+
+    /**
+     * We memoize the calculation of supertypes to avoid redoing this recursion during operation.
+     */
+<span class="fc" id="L210">    private final Supplier&lt;EnumSet&lt;DataType&gt;&gt; supertypesMemo = memoize(new Supplier&lt;EnumSet&lt;DataType&gt;&gt;() {</span>
+
+        @Override
+        public EnumSet&lt;DataType&gt; get() {
+<span class="fc" id="L214">            final EnumSet&lt;DataType&gt; types = copyOf(supertype.supertypes());</span>
+<span class="fc" id="L215">            types.add(self);</span>
+<span class="fc" id="L216">            return types;</span>
+        }
+    });
+
+    /**
+     * @return The supertypes of this type, including itself.
+     */
+    public EnumSet&lt;DataType&gt; supertypes() {
+<span class="fc" id="L224">        return supertypesMemo.get();</span>
+    }
+
+    /**
+     * Map from lex to Java value.
+     * 
+     * @param s
+     * @return s parsed into an instance of a Java type representing this {@link DataType}
+     * @throws ParsingException
+     */
+    abstract public &lt;T extends Comparable&lt;T&gt;&gt; T parse(final String s) throws ParsingException;
+
+    /**
+     * @param s A value to parse
+     * @return an {@link EnumSet} of those DataTypes into which s can be parsed
+     */
+    public static EnumSet&lt;DataType&gt; parseableAs(final String s) {
+<span class="fc" id="L241">        return copyOf(filter(DataType.valuesSet(), new Predicate&lt;DataType&gt;() {</span>
+
+            @Override
+            public boolean apply(final DataType t) {
+                try {
+<span class="fc" id="L246">                    t.parse(s);</span>
+<span class="fc" id="L247">                    return true;</span>
+<span class="fc" id="L248">                } catch (final ParsingException e) {</span>
+<span class="fc" id="L249">                    return false;</span>
+                }
+            }
+        }));
+    }
+
+<span class="fc" id="L255">    private static Function&lt;DataType, Integer&gt; numSuperTypes = new Function&lt;DataType, Integer&gt;() {</span>
+
+        @Override
+        public Integer apply(final DataType type) {
+<span class="fc" id="L259">            return type.supertypes().size();</span>
+        }
+    };
+
+    /**
+     * A simple ordering by hierarchy. Those types with more supertypes are considered &quot;smaller&quot; than those with
+     * fewer. In case of a tie, natural enum order prevails.
+     */
+<span class="fc" id="L267">    private static final Comparator&lt;DataType&gt; orderingByHierarchy = natural().reverse()</span>
+            .onResultOf(numSuperTypes).compound(natural());
+
+    public static SortedSet&lt;DataType&gt; sortByHierarchy(final Iterable&lt;DataType&gt; types) {
+<span class="fc" id="L271">        return from(types).toSortedSet(orderingByHierarchy);</span>
+    }
+
+    // private static final Logger log = getLogger(DataType.class);
+
+    /**
+     * How to recognize a Boolean lex for true.
+     */
+<span class="fc" id="L279">    public static final Pattern BOOLEAN_TRUE_REGEXP = compile(&quot;^true|t$&quot;, CASE_INSENSITIVE);</span>
+
+    /**
+     * How to recognize a Boolean lex for false.
+     */
+<span class="fc" id="L284">    public static final Pattern BOOLEAN_FALSE_REGEXP = compile(&quot;^false|f$&quot;, CASE_INSENSITIVE);</span>
+
+    /**
+     * We use the well-known regex from &lt;a href=&quot;http://tools.ietf.org/html/rfc3986#appendix-B&quot;&gt;the standard&lt;/a&gt; but
+     * we disallow relative URIs.
+     */
+<span class="fc" id="L290">    static Pattern URI_REGEX = compile(&quot;^(([^:/?#]+):)(//([^/?#]*))?([^?#]*)(\\?([^#]*))?(#(.*))?&quot;);</span>
+
+<span class="fc" id="L292">    static final Function&lt;java.lang.String, Float&gt; string2float = new Function&lt;String, Float&gt;() {</span>
+
+        @Override
+        public Float apply(final java.lang.String seg) {
+<span class="fc" id="L296">            return parseFloat(seg);</span>
+        }
+    };
+
+<span class="fc" id="L300">    static List&lt;DateTimeFormatter&gt; dateTimeFormats = ImmutableList.of(shortDateTime(), mediumDateTime(),</span>
+            fullDateTime(), dateOptionalTimeParser(), dateTimeParser(), forPattern(&quot;yyyy-MM-dd HH:mm:ss&quot;));
+
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

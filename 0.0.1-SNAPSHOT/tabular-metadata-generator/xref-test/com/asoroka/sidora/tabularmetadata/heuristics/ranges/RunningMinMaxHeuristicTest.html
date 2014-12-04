@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head><meta http-equiv="content-type" content="text/html; charset=UTF-8" />
+<title>RunningMinMaxHeuristicTest xref</title>
+<link type="text/css" rel="stylesheet" href="../../../../../../stylesheet.css" />
+</head>
+<body>
+<div id="overview"><a href="../../../../../../../testapidocs/com/asoroka/sidora/tabularmetadata/heuristics/ranges/RunningMinMaxHeuristicTest.html">View Javadoc</a></div><pre>
+<a class="jxr_linenumber" name="L1" href="#L1">1</a>   
+<a class="jxr_linenumber" name="L2" href="#L2">2</a>   <strong class="jxr_keyword">package</strong> com.asoroka.sidora.tabularmetadata.heuristics.ranges;
+<a class="jxr_linenumber" name="L3" href="#L3">3</a>   
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.asoroka.sidora.tabularmetadata.testframework.TestUtilities.addValues;
+<a class="jxr_linenumber" name="L5" href="#L5">5</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> com.google.common.collect.Ordering.natural;
+<a class="jxr_linenumber" name="L6" href="#L6">6</a>   <strong class="jxr_keyword">import</strong> <strong class="jxr_keyword">static</strong> org.junit.Assert.assertEquals;
+<a class="jxr_linenumber" name="L7" href="#L7">7</a>   
+<a class="jxr_linenumber" name="L8" href="#L8">8</a>   <strong class="jxr_keyword">import</strong> java.util.Map;
+<a class="jxr_linenumber" name="L9" href="#L9">9</a>   
+<a class="jxr_linenumber" name="L10" href="#L10">10</a>  <strong class="jxr_keyword">import</strong> org.junit.experimental.theories.DataPoints;
+<a class="jxr_linenumber" name="L11" href="#L11">11</a>  <strong class="jxr_keyword">import</strong> org.junit.experimental.theories.Theories;
+<a class="jxr_linenumber" name="L12" href="#L12">12</a>  <strong class="jxr_keyword">import</strong> org.junit.experimental.theories.Theory;
+<a class="jxr_linenumber" name="L13" href="#L13">13</a>  <strong class="jxr_keyword">import</strong> org.junit.runner.RunWith;
+<a class="jxr_linenumber" name="L14" href="#L14">14</a>  
+<a class="jxr_linenumber" name="L15" href="#L15">15</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.datatype.DataType;
+<a class="jxr_linenumber" name="L16" href="#L16">16</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.heuristics.HeuristicTestFrame;
+<a class="jxr_linenumber" name="L17" href="#L17">17</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.testframework.RowsOfRandomValuesForAllTypes;
+<a class="jxr_linenumber" name="L18" href="#L18">18</a>  <strong class="jxr_keyword">import</strong> com.asoroka.sidora.tabularmetadata.testframework.TestUtilities.RandomValuesForAType;
+<a class="jxr_linenumber" name="L19" href="#L19">19</a>  <strong class="jxr_keyword">import</strong> com.google.common.collect.Range;
+<a class="jxr_linenumber" name="L20" href="#L20">20</a>  
+<a class="jxr_linenumber" name="L21" href="#L21">21</a>  <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L22" href="#L22">22</a>  <em class="jxr_javadoccomment"> * @author ajs6f</em>
+<a class="jxr_linenumber" name="L23" href="#L23">23</a>  <em class="jxr_javadoccomment"> */</em>
+<a class="jxr_linenumber" name="L24" href="#L24">24</a>  @RunWith(Theories.<strong class="jxr_keyword">class</strong>)
+<a class="jxr_linenumber" name="L25" href="#L25">25</a>  <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">class</strong> <a href="../../../../../../com/asoroka/sidora/tabularmetadata/heuristics/ranges/RunningMinMaxHeuristicTest.html">RunningMinMaxHeuristicTest</a> <strong class="jxr_keyword">extends</strong> HeuristicTestFrame&lt;RunningMinMaxHeuristic, Map&lt;DataType, Range&lt;?&gt;&gt;&gt; {
+<a class="jxr_linenumber" name="L26" href="#L26">26</a>  
+<a class="jxr_linenumber" name="L27" href="#L27">27</a>      @DataPoints
+<a class="jxr_linenumber" name="L28" href="#L28">28</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> DataType[] datatypes = DataType.values();
+<a class="jxr_linenumber" name="L29" href="#L29">29</a>  
+<a class="jxr_linenumber" name="L30" href="#L30">30</a>      @Override
+<a class="jxr_linenumber" name="L31" href="#L31">31</a>      <strong class="jxr_keyword">protected</strong> RunningMinMaxHeuristic newTestHeuristic() {
+<a class="jxr_linenumber" name="L32" href="#L32">32</a>          <strong class="jxr_keyword">return</strong> <strong class="jxr_keyword">new</strong> RunningMinMaxHeuristic();
+<a class="jxr_linenumber" name="L33" href="#L33">33</a>      }
+<a class="jxr_linenumber" name="L34" href="#L34">34</a>  
+<a class="jxr_linenumber" name="L35" href="#L35">35</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L36" href="#L36">36</a>  <em class="jxr_javadoccomment">     * Asserts that the range of a {@link DataType} for which no values have been seen is {@link Range#all()}.</em>
+<a class="jxr_linenumber" name="L37" href="#L37">37</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L38" href="#L38">38</a>      @Theory
+<a class="jxr_linenumber" name="L39" href="#L39">39</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMissingLimits(<strong class="jxr_keyword">final</strong> DataType type) {
+<a class="jxr_linenumber" name="L40" href="#L40">40</a>          <strong class="jxr_keyword">final</strong> RunningMinMaxHeuristic testStrategy = newTestHeuristic();
+<a class="jxr_linenumber" name="L41" href="#L41">41</a>          <strong class="jxr_keyword">final</strong> Range&lt;?&gt; range = testStrategy.results().get(type);
+<a class="jxr_linenumber" name="L42" href="#L42">42</a>          assertEquals(<span class="jxr_string">"Found a defined range where we should not have!"</span>, Range.all(), range);
+<a class="jxr_linenumber" name="L43" href="#L43">43</a>      }
+<a class="jxr_linenumber" name="L44" href="#L44">44</a>  
+<a class="jxr_linenumber" name="L45" href="#L45">45</a>      <em class="jxr_javadoccomment">/**</em>
+<a class="jxr_linenumber" name="L46" href="#L46">46</a>  <em class="jxr_javadoccomment">     * Asserts that for each {@link DataType}, after supplying some comparable values of that type, the range recorded</em>
+<a class="jxr_linenumber" name="L47" href="#L47">47</a>  <em class="jxr_javadoccomment">     * should be the accurate range of the values supplied. This test does not examine interactions between types</em>
+<a class="jxr_linenumber" name="L48" href="#L48">48</a>  <em class="jxr_javadoccomment">     * (i.e. for values that could be parsed as several types).</em>
+<a class="jxr_linenumber" name="L49" href="#L49">49</a>  <em class="jxr_javadoccomment">     */</em>
+<a class="jxr_linenumber" name="L50" href="#L50">50</a>      @Theory
+<a class="jxr_linenumber" name="L51" href="#L51">51</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">void</strong> testMinsAndMaxesShouldAlwaysBeFoundPerType(
+<a class="jxr_linenumber" name="L52" href="#L52">52</a>              @RowsOfRandomValuesForAllTypes(numRowsPerType = 5, valuesPerType = 5) <strong class="jxr_keyword">final</strong> RandomValuesForAType values) {
+<a class="jxr_linenumber" name="L53" href="#L53">53</a>  
+<a class="jxr_linenumber" name="L54" href="#L54">54</a>          <strong class="jxr_keyword">final</strong> RunningMinMaxHeuristic testStrategy = newTestHeuristic();
+<a class="jxr_linenumber" name="L55" href="#L55">55</a>          <strong class="jxr_keyword">final</strong> Comparable&lt;?&gt; lowest = natural().min(values);
+<a class="jxr_linenumber" name="L56" href="#L56">56</a>          <strong class="jxr_keyword">final</strong> Comparable&lt;?&gt; highest = natural().max(values);
+<a class="jxr_linenumber" name="L57" href="#L57">57</a>          addValues(testStrategy, values);
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>          <strong class="jxr_keyword">final</strong> Range&lt;?&gt; range = testStrategy.results().get(values.type);
+<a class="jxr_linenumber" name="L59" href="#L59">59</a>          <strong class="jxr_keyword">final</strong> Comparable&lt;?&gt; calculatedMaxForType = range.upperEndpoint();
+<a class="jxr_linenumber" name="L60" href="#L60">60</a>          <strong class="jxr_keyword">final</strong> Comparable&lt;?&gt; calculatedMinForType = range.lowerEndpoint();
+<a class="jxr_linenumber" name="L61" href="#L61">61</a>          assertEquals(<span class="jxr_string">"Calculated maximum should be the highest value submitted!"</span>, highest,
+<a class="jxr_linenumber" name="L62" href="#L62">62</a>                  calculatedMaxForType);
+<a class="jxr_linenumber" name="L63" href="#L63">63</a>          assertEquals(<span class="jxr_string">"Calculated minimum should be the lowest value submitted!"</span>, lowest,
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>                  calculatedMinForType);
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>      }
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>  }
+</pre>
+<hr/>
+<div id="footer">Copyright &#169; 2014. All rights reserved.</div>
+</body>
+</html>

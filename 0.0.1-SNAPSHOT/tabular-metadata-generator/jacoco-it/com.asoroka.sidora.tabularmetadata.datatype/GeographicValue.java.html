@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../.resources/report.gif" type="image/gif"/><title>GeographicValue.java</title><link rel="stylesheet" href="../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../.sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">Tabular Metadata Generator</a> &gt; <a href="index.source.html" class="el_package">com.asoroka.sidora.tabularmetadata.datatype</a> &gt; <span class="el_source">GeographicValue.java</span></div><h1>GeographicValue.java</h1><pre class="source lang-java linenums">
+package com.asoroka.sidora.tabularmetadata.datatype;
+
+import static com.google.common.base.Joiner.on;
+import static com.google.common.collect.Iterables.elementsEqual;
+
+import java.io.Serializable;
+import java.util.List;
+
+import com.google.common.base.Joiner;
+import com.google.common.collect.Ordering;
+
+/**
+ * A simple type for geographic coordinates.
+ * 
+ * @author ajs6f
+ */
+public class GeographicValue implements Comparable&lt;GeographicValue&gt;, Serializable {
+
+<span class="fc" id="L20">    private static final Joiner TO_STRING_HELPER = on(',');</span>
+
+    private static final long serialVersionUID = 1L;
+
+    public static final byte MAXIMUM_DIMENSION = 3;
+
+    public static final byte MINIMUM_DIMENSION = 2;
+
+<span class="fc" id="L28">    private static final Ordering&lt;Iterable&lt;Float&gt;&gt; ordering = Ordering.&lt;Float&gt; natural().lexicographical();</span>
+
+    /**
+     * The coordinates of this {@link GeographicValue}.
+     */
+    public final List&lt;Float&gt; coordinates;
+
+    /**
+     * @param coordinates
+     */
+<span class="fc" id="L38">    public GeographicValue(final List&lt;Float&gt; coordinates) {</span>
+<span class="fc" id="L39">        final int size = coordinates.size();</span>
+<span class="pc bpc" id="L40" title="3 of 4 branches missed.">        if (size &lt; MINIMUM_DIMENSION || size &gt; MAXIMUM_DIMENSION) {</span>
+<span class="fc" id="L41">            throw new NumberFormatException(&quot;Unacceptable dimensionality &quot; + size + &quot; for coordinates!&quot;);</span>
+        }
+<span class="nc" id="L43">        this.coordinates = coordinates;</span>
+<span class="nc" id="L44">    }</span>
+
+    /**
+     * Lexicographical ordering.
+     * 
+     * @see java.lang.Comparable#compareTo(java.lang.Object)
+     **/
+    @Override
+    public int compareTo(final GeographicValue o) {
+<span class="nc" id="L53">        return ordering.compare(this.coordinates, o.coordinates);</span>
+    }
+
+    @Override
+    public String toString() {
+<span class="nc" id="L58">        return TO_STRING_HELPER.join(coordinates);</span>
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+<span class="nc bnc" id="L63" title="All 2 branches missed.">        if (o instanceof GeographicValue) {</span>
+<span class="nc" id="L64">            final GeographicValue other = (GeographicValue) o;</span>
+<span class="nc" id="L65">            return elementsEqual(coordinates, other.coordinates);</span>
+        }
+<span class="nc" id="L67">        return false;</span>
+    }
+
+    @Override
+    public int hashCode() {
+<span class="nc" id="L72">        return coordinates.hashCode();</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.7.2.201409121644</span></div></body></html>

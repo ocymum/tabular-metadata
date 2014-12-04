@@ -1,0 +1,40 @@
+GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.ranges,RunningMinMaxHeuristic.new Function() {...},6,44,2,4,2,10,2,3,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.ranges,RunningMinMaxHeuristic,9,141,0,6,3,19,1,10,1,7
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.headers,DefaultHeaderHeuristic.new Predicate() {...},0,9,0,0,0,2,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.headers,TreatsEachFieldAlikeHeaderHeuristic,0,30,0,0,0,7,0,5,0,5
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.headers,DefaultHeaderHeuristic,6,10,0,0,2,3,2,3,2,3
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.headers,RegexpHeaderHeuristic,30,0,0,0,8,0,5,0,5,0
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.enumerations,InMemoryEnumeratedValuesHeuristic,2,69,0,4,1,13,1,7,1,5
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.formats,TabularFormat.TabSeparated,5,0,0,0,2,0,2,0,2,0
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.formats,TabularFormat.Default,5,0,0,0,2,0,2,0,2,0
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.types,MinimumDistanceBetweenNonparseablesHeuristic,114,0,6,0,24,0,10,0,7,0
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.types,StrictHeuristic,2,42,0,0,1,6,1,4,1,4
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.types,PerTypeHeuristic,0,27,0,0,0,7,0,3,0,3
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.types,CountAggregatingHeuristic,2,66,1,3,1,15,1,6,0,5
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.types,PerTypeHeuristic.new Predicate() {...},0,11,0,0,0,2,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics.types,FractionHeuristic,74,0,4,0,13,0,7,0,5,0
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics,ValueCountingHeuristic,0,26,0,0,0,8,0,5,0,5
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics,Heuristic.Extract,0,6,0,0,0,2,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.heuristics,AbstractHeuristic,0,5,0,0,0,3,0,1,0,1
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata,TabularMetadataGenerator,76,170,7,7,15,32,11,6,6,4
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata,TabularMetadata.new Function1() {...},0,29,0,0,0,5,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata,TabularScanner,16,195,7,15,3,39,5,13,0,7
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata,EmptyDataFileException,4,0,0,0,2,0,1,0,1,0
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata,TabularMetadata,0,66,0,0,0,13,0,8,0,8
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,GeographicValue,37,29,5,1,9,6,7,2,4,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType,5,198,0,2,0,27,1,8,1,7
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},0,13,0,0,0,3,0,3,0,3
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},5,26,1,1,1,5,1,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},5,19,1,1,1,4,1,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},0,20,0,0,0,4,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},0,20,0,0,0,4,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new Function() {...},4,3,0,0,1,1,1,1,1,1
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},6,23,2,2,2,4,2,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new Function() {...},0,8,0,0,0,2,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new Predicate() {...},0,16,0,0,0,5,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},0,29,0,2,0,6,0,3,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},5,18,1,1,1,4,1,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new Supplier() {...},0,20,0,0,0,4,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,DataType.new DataType() {...},12,15,0,0,2,3,0,2,0,2
+Tabular Metadata Generator,com.asoroka.sidora.tabularmetadata.datatype,ParsingException,0,9,0,0,0,4,0,2,0,2
