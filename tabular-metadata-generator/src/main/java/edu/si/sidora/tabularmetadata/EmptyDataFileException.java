@@ -37,9 +37,10 @@ public class EmptyDataFileException extends IllegalArgumentException {
     private static final long serialVersionUID = 1L;
 
     /**
-     * @param url the URL which resolved to an empty data file
+     * @param msg
+     * @param e
      */
-    public EmptyDataFileException(final String url) {
-        super(url);
+    public EmptyDataFileException(final String msg, Throwable e) {
+        super(msg, e);
     }
 }

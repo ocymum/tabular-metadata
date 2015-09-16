@@ -7,9 +7,6 @@
         </encoder>
     </appender>
     
-    <logger name="com.asoroka" additivity="false" level="TRACE">
-        <appender-ref ref="STDOUT"/>
-    </logger>
     <logger name="edu.si" additivity="false" level="TRACE">
         <appender-ref ref="STDOUT"/>
     </logger>

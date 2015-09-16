@@ -128,7 +128,7 @@ public class TabularMetadataGenerator {
 			if (hasHeaders) {
 				headerNames = newArrayList(firstLine);
 				log.debug("Found headers: {}", headerNames);
-				parser.next();
+				if (parser.hasNext()) parser.next();
 			} else {
 				headerNames = emptyHeaders(firstLine.size());
 				log.debug("Found no headers.");
@@ -150,7 +150,7 @@ public class TabularMetadataGenerator {
 			final List<Ratio> valuesSeen = sequence(typeStrategies).map(EXTRACT_RATIOS).toList();
 			return new TabularMetadata(headerNames, valuesSeen, columnTypes, minMaxes, enumValues);
 		} catch (final NoSuchElementException e) {
-			throw new EmptyDataFileException(dataUrl + " has no data in it!");
+			throw new EmptyDataFileException(dataUrl + " has no data in it!", e);
 		}
 	}
 
