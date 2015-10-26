@@ -28,12 +28,10 @@ package edu.si.sidora.tabularmetadata.datatype;
 
 import static com.google.common.base.Suppliers.memoize;
 import static com.google.common.collect.FluentIterable.from;
-import static com.google.common.collect.Lists.transform;
 import static com.google.common.collect.Ordering.natural;
 import static com.google.common.collect.Sets.filter;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
-import static java.util.Arrays.asList;
 import static java.util.EnumSet.allOf;
 import static java.util.EnumSet.copyOf;
 import static java.util.EnumSet.of;
@@ -49,6 +47,7 @@ import static org.joda.time.format.ISODateTimeFormat.dateTimeParser;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.List;
@@ -163,7 +162,10 @@ public enum DataType {
         @Override
         public GeographicValue parse(final String s) throws ParsingException {
             try {
-                final List<Float> parts = transform(asList(s.split(",")), string2float);
+            		final List<Float> parts = new ArrayList<>();
+            		for (final String part : s.split(",")) {
+            			parts.add(parseFloat(part));
+            		}
                 return new GeographicValue(parts);
             } catch (final NumberFormatException e) {
                 throw new ParsingException("Could not parse as Geographic!", e);

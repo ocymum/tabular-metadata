@@ -56,7 +56,6 @@ import org.junit.runner.RunWith;
 import com.google.common.collect.ImmutableMap;
 import com.googlecode.totallylazy.Function1;
 
-import edu.si.sidora.tabularmetadata.datatype.DataType;
 import edu.si.sidora.tabularmetadata.testframework.RowsOfRandomValuesForAllTypes;
 import edu.si.sidora.tabularmetadata.testframework.TestUtilities.RandomValuesForAType;
 
@@ -186,7 +185,10 @@ public class DataTypeTest {
 
     @Test
     public void testBadGeographies() {
-        String testValue = "23, 23, 23, 23";
+    		String testValue = "Absolom, absolom!";
+        assertFalse("Accepted a two-string-valued tuple as geographic coordinates!", parseableAs(testValue)
+                .contains(DataType.Geographic));
+        testValue = "23, 23, 23, 23";
         assertFalse("Accepted a four-valued tuple as geographic coordinates!", parseableAs(testValue)
                 .contains(DataType.Geographic));
         testValue = "23";
